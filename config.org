@@ -6,7 +6,7 @@
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (package-initialize)
 #+END_SRC
-* =.emacs.d=
+* .emacs.d
 ** Configuration files
 #+BEGIN_SRC emacs-lisp
   (defun my-open-emacs-config ()
