@@ -23,7 +23,7 @@
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
 #+END_SRC
-* Evil
+* Evil mode and general keybindings
 ** Packages
 #+BEGIN_SRC emacs-lisp
   (require 'evil)
@@ -82,9 +82,10 @@ Make the leader key work in problematic modes.
 #+BEGIN_SRC emacs-lisp
   (defmacro enable-leader-key (hook map)
     `(add-hook ,hook (lambda ()
-                      (define-key ,map (kbd leader-key) leader-map))))
+			 (define-key ,map (kbd leader-key) leader-map))))
 
   (enable-leader-key 'Info-mode-hook evil-motion-state-local-map)
+  (enable-leader-key 'help-mode-hook evil-motion-state-local-map)
   (enable-leader-key 'dired-mode-hook evil-normal-state-local-map)
 #+END_SRC
 * Which-key
@@ -96,19 +97,19 @@ Make the leader key work in problematic modes.
 
 ** Add which-key names to leader keys
 #+BEGIN_SRC emacs-lisp
-  (defun leader-which-key-name (keys name)
+  (defun set-leader-which-key-name (keys name)
     (which-key-add-key-based-replacements (concat leader-key " " keys) name))
 
-  (defun leader-which-key-names (&rest args)
+  (defun set-leader-which-key-names (&rest args)
     (unless (null args)
       (leader-which-key-name (car args) (car (cdr args)))
       (apply 'leader-which-key-names (cdr (cdr args)))))
 
-  (leader-which-key-names "SPC" "M-x"
-                          "f" "files"
-                          "d" "buffers"
-                          "w" "windows"
-                          "h" "help")
+  (set-leader-which-key-names "SPC" "M-x"
+			      "f" "files"
+			      "d" "buffers"
+			      "w" "windows"
+			      "h" "help")
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp
@@ -116,8 +117,9 @@ Make the leader key work in problematic modes.
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
   (menu-bar-mode 0)
-  (set-face-attribute 'default nil :family "Inconsolata")
+  (set-face-attribute 'default nil :family "Inconsolata" :height 140)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
+  (setq frame-title-format '(multiple-frames "%b" "Emacs"))
 #+END_SRC
 * Programming
 ** General
