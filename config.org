@@ -35,6 +35,8 @@
 ** Ace-jump
 #+BEGIN_SRC emacs-lisp
   (require 'ace-jump-mode)
+  (general-emap "C-j" 'ace-jump-char-mode)
+
   (evil-declare-motion 'ace-jump-char-mode)
   (general-nvmap "f" 'ace-jump-char-mode)
   (general-def :states 'operator "f" 'ace-jump-char-mode)
