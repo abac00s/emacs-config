@@ -1,0 +1,103 @@
+* Package repositories
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (package-initialize)
+#+END_SRC
+* =.emacs.d=
+** Configuration files
+#+BEGIN_SRC emacs-lisp
+  (defun my-open-emacs-config ()
+    (interactive)
+    (find-file "~/.emacs.d/config.org"))
+
+  (setq custom-file "~/.emacs.d/init-custom.el")
+  (unless (file-exists-p custom-file)
+    (with-temp-buffer
+      (write-file custom-file)))
+  (load-file custom-file)
+#+END_SRC
+** Backups
+#+BEGIN_SRC emacs-lisp
+  (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
+#+END_SRC
+* Evil
+** Packages
+#+BEGIN_SRC emacs-lisp
+  (require 'evil)
+  (evil-mode 1)
+
+  (require 'general)
+  (general-evil-setup)
+#+END_SRC
+** Ace-jump
+#+BEGIN_SRC emacs-lisp
+  (require 'ace-jump-mode)
+  (evil-declare-motion 'ace-jump-char-mode)
+  (general-nvmap "f" 'ace-jump-char-mode)
+  (general-def :states 'operator "f" 'ace-jump-char-mode)
+#+END_SRC
+** Keybindings
+#+BEGIN_SRC emacs-lisp
+  (general-imap "f" (general-key-dispatch 'self-insert-command
+                      :timeout 0.5
+                      "d" 'evil-normal-state))
+#+END_SRC
+** Leader keybindings
+Define a leader map and add some basic command to it.
+
+#+BEGIN_SRC emacs-lisp
+  (defvar leader-key "SPC")
+  (defvar leader-map (make-sparse-keymap))
+
+  (general-nmap leader-key leader-map)
+
+  (general-def :keymaps 'leader-map
+    "SPC" '(execute-extended-command :wk "M-x")
+    "h" (general-simulate-key "C-h" :state 'emacs :which-key "help")
+    "w" (general-simulate-key "C-w" :state 'normal :which-key "windows")
+
+    "f" '(:wk "files")
+    "f s" 'save-buffer
+    "f f" 'find-file
+    "f q" 'my-open-emacs-config
+
+    "d" '(:wk "buffers")
+    "d d" 'switch-to-buffer
+    "d h" 'previous-buffer
+    "d l" 'next-buffer
+    "d v" 'list-buffers
+
+    "a d" 'dired)
+
+#+END_SRC
+
+Make the leader key work in problematic modes.
+
+#+BEGIN_SRC emacs-lisp
+  (defun enable-leader-key (map state)
+    (general-def :keymaps map :states state leader-key leader-map))
+
+  (enable-leader-key 'Info-mode-map 'motion)
+  (enable-leader-key 'dired-mode-map 'normal)
+#+END_SRC
+* Which-key
+#+BEGIN_SRC emacs-lisp
+  (require 'which-key)
+  (which-key-mode)
+#+END_SRC
+* UI
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'material t)
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0)
+  (menu-bar-mode 0)
+  (set-face-attribute 'default nil :family "Inconsolata")
+#+END_SRC
+* Programming
+** General
+*** Completion
+#+BEGIN_SRC emacs-lisp
+  (require 'auto-complete)
+  (ac-config-default)
+#+END_SRC
