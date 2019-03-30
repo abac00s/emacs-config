@@ -1,5 +1,7 @@
 * Package repositories
 #+BEGIN_SRC emacs-lisp
+  (setq lexical-binding t)
+
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (package-initialize)
@@ -43,6 +45,12 @@
                       :timeout 0.5
                       "d" 'evil-normal-state))
 #+END_SRC
+
+Change the =TAB= behaviour in Evil normal state to the Emacs default.
+
+#+BEGIN_SRC emacs-lisp
+  (general-nmap "TAB" 'indent-for-tab-command)
+#+END_SRC
 ** Leader keybindings
 Define a leader map and add some basic command to it.
 
@@ -50,19 +58,15 @@ Define a leader map and add some basic command to it.
   (defvar leader-key "SPC")
   (defvar leader-map (make-sparse-keymap))
 
-  (general-nmap leader-key leader-map)
-
   (general-def :keymaps 'leader-map
-    "SPC" '(execute-extended-command :wk "M-x")
-    "h" (general-simulate-key "C-h" :state 'emacs :which-key "help")
-    "w" (general-simulate-key "C-w" :state 'normal :which-key "windows")
+    "SPC" 'execute-extended-command
+    "h" (general-simulate-key "C-h" :state 'emacs)
+    "w" (general-simulate-key "C-w" :state 'normal)
 
-    "f" '(:wk "files")
     "f s" 'save-buffer
     "f f" 'find-file
     "f q" 'my-open-emacs-config
 
-    "d" '(:wk "buffers")
     "d d" 'switch-to-buffer
     "d h" 'previous-buffer
     "d l" 'next-buffer
@@ -70,21 +74,41 @@ Define a leader map and add some basic command to it.
 
     "a d" 'dired)
 
+  (define-key evil-normal-state-map (kbd leader-key) leader-map)
 #+END_SRC
 
 Make the leader key work in problematic modes.
 
 #+BEGIN_SRC emacs-lisp
-  (defun enable-leader-key (map state)
-    (general-def :keymaps map :states state leader-key leader-map))
+  (defmacro enable-leader-key (hook map)
+    `(add-hook ,hook (lambda ()
+                      (define-key ,map (kbd leader-key) leader-map))))
 
-  (enable-leader-key 'Info-mode-map 'motion)
-  (enable-leader-key 'dired-mode-map 'normal)
+  (enable-leader-key 'Info-mode-hook evil-motion-state-local-map)
+  (enable-leader-key 'dired-mode-hook evil-normal-state-local-map)
 #+END_SRC
 * Which-key
+** Package
 #+BEGIN_SRC emacs-lisp
   (require 'which-key)
   (which-key-mode)
+#+END_SRC
+
+** Add which-key names to leader keys
+#+BEGIN_SRC emacs-lisp
+  (defun leader-which-key-name (keys name)
+    (which-key-add-key-based-replacements (concat leader-key " " keys) name))
+
+  (defun leader-which-key-names (&rest args)
+    (unless (null args)
+      (leader-which-key-name (car args) (car (cdr args)))
+      (apply 'leader-which-key-names (cdr (cdr args)))))
+
+  (leader-which-key-names "SPC" "M-x"
+                          "f" "files"
+                          "d" "buffers"
+                          "w" "windows"
+                          "h" "help")
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp
@@ -93,6 +117,7 @@ Make the leader key work in problematic modes.
   (scroll-bar-mode 0)
   (menu-bar-mode 0)
   (set-face-attribute 'default nil :family "Inconsolata")
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+END_SRC
 * Programming
 ** General
