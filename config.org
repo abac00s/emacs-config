@@ -128,3 +128,9 @@ Make the leader key work in problematic modes.
   (require 'auto-complete)
   (ac-config-default)
 #+END_SRC
+* Magit
+#+BEGIN_SRC emacs-lisp
+  (require 'magit)
+  (general-def :keymaps 'leader-map "a g" 'magit-status)
+  (general-def "C-x g" 'magit-status)
+#+END_SRC
