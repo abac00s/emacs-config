@@ -84,7 +84,7 @@ Make the leader key work in problematic modes.
 #+BEGIN_SRC emacs-lisp
   (defmacro enable-leader-key (hook map)
     `(add-hook ,hook (lambda ()
-			 (define-key ,map (kbd leader-key) leader-map))))
+		       (define-key ,map (kbd leader-key) leader-map))))
 
   (enable-leader-key 'Info-mode-hook evil-motion-state-local-map)
   (enable-leader-key 'help-mode-hook evil-motion-state-local-map)
@@ -104,8 +104,8 @@ Make the leader key work in problematic modes.
 
   (defun set-leader-which-key-names (&rest args)
     (unless (null args)
-      (leader-which-key-name (car args) (car (cdr args)))
-      (apply 'leader-which-key-names (cdr (cdr args)))))
+      (set-leader-which-key-name (car args) (car (cdr args)))
+      (apply 'set-leader-which-key-names (cdr (cdr args)))))
 
   (set-leader-which-key-names "SPC" "M-x"
 			      "f" "files"
