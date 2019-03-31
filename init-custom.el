@@ -13,7 +13,7 @@
  '(evil-move-cursor-back nil)
  '(package-selected-packages
    (quote
-    (aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil))))
+    (geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
