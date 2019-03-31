@@ -130,6 +130,16 @@ Make the leader key work in problematic modes.
   (require 'auto-complete)
   (ac-config-default)
 #+END_SRC
+** Lisp
+*** Modes
+#+BEGIN_SRC emacs-lisp
+  (defvar lisp-modes-hooks '(emacs-lisp-mode-hook))
+#+END_SRC
+*** Rainbow-delimiters
+#+BEGIN_SRC emacs-lisp
+  (dolist (hook lisp-modes-hooks)
+    (add-hook hook #'rainbow-delimiters-mode))
+#+END_SRC
 * Magit
 #+BEGIN_SRC emacs-lisp
   (require 'magit)
