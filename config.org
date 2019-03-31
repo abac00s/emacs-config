@@ -133,12 +133,52 @@ Make the leader key work in problematic modes.
 ** Lisp
 *** Modes
 #+BEGIN_SRC emacs-lisp
-  (defvar lisp-modes-hooks '(emacs-lisp-mode-hook))
+  (defvar lisp-modes '(emacs-lisp-mode
+		       lisp-interaction-mode))
+
+  (defun mode-to-hook (mode)
+    (intern-soft (concat (symbol-name mode) "-hook")))
 #+END_SRC
 *** Rainbow-delimiters
 #+BEGIN_SRC emacs-lisp
-  (dolist (hook lisp-modes-hooks)
-    (add-hook hook #'rainbow-delimiters-mode))
+  (require 'rainbow-delimiters)
+
+  (dolist (mode lisp-modes)
+    (add-hook (mode-to-hook mode) #'rainbow-delimiters-mode))
+#+END_SRC
+*** Lispy
+
+I want to be able to use both Evil mode and Lispy while writing lisp.
+Therefore =[= and =]=, apart from calling =lispy-backward= and =lispy-forward=,
+also switch from normal/insert to emacs state, while =SPC= switches from emacs to normal state.
+
+#+BEGIN_SRC emacs-lisp
+  (require 'lispy)
+
+  (defun my-lispy-backward (arg)
+    (interactive "p")
+    (evil-emacs-state)
+    (lispy-backward 1))
+
+  (defun my-lispy-forward (arg)
+    (interactive "p")
+    (evil-emacs-state)
+    (lispy-forward 1))
+
+  (dolist (mode lisp-modes)
+    (add-hook (mode-to-hook mode)
+	      (lambda ()
+		(lispy-mode 1)
+		(define-key evil-normal-state-local-map (kbd "[") #'my-lispy-backward)
+		(define-key evil-normal-state-local-map (kbd "]") #'my-lispy-forward)
+		(define-key evil-insert-state-local-map (kbd "[") #'my-lispy-backward)
+		(define-key evil-insert-state-local-map (kbd "]") #'my-lispy-forward)
+		(define-key evil-emacs-state-local-map (kbd "SPC") #'evil-normal-state))))
+#+END_SRC
+*** Aggresive-indent
+#+BEGIN_SRC emacs-lisp
+  (dolist (mode lisp-modes)
+    (add-hook (mode-to-hook mode) #'aggressive-indent-mode))
 #+END_SRC
 * Magit
 #+BEGIN_SRC emacs-lisp
