@@ -151,39 +151,23 @@ Make the leader key work in problematic modes.
   (dolist (mode lisp-modes)
     (add-hook (mode-to-hook mode) #'rainbow-delimiters-mode))
 #+END_SRC
-*** Lispy
-
-I want to be able to use both Evil mode and Lispy while writing lisp.
-Therefore =[= and =]=, apart from calling =lispy-backward= and =lispy-forward=,
-also switch from normal/insert to emacs state, while =SPC= switches from emacs to normal state.
-
-#+BEGIN_SRC emacs-lisp
-  (require 'lispy)
-
-  (defun my-lispy-backward (arg)
-    (interactive "p")
-    (evil-emacs-state)
-    (lispy-backward 1))
-
-  (defun my-lispy-forward (arg)
-    (interactive "p")
-    (evil-emacs-state)
-    (lispy-forward 1))
-
-  (dolist (mode lisp-modes)
-    (add-hook (mode-to-hook mode)
-	      (lambda ()
-		(lispy-mode 1)
-		(define-key evil-normal-state-local-map (kbd "[") #'my-lispy-backward)
-		(define-key evil-normal-state-local-map (kbd "]") #'my-lispy-forward)
-		(define-key evil-insert-state-local-map (kbd "[") #'my-lispy-backward)
-		(define-key evil-insert-state-local-map (kbd "]") #'my-lispy-forward)
-		(define-key evil-emacs-state-local-map (kbd "SPC") #'evil-normal-state))))
-#+END_SRC
 *** Aggresive-indent
 #+BEGIN_SRC emacs-lisp
   (dolist (mode lisp-modes)
     (add-hook (mode-to-hook mode) #'aggressive-indent-mode))
+#+END_SRC
+*** Paredit
+#+BEGIN_SRC emacs-lisp
+  (require 'paredit)
+
+  (dolist (mode lisp-modes)
+    (add-hook (mode-to-hook mode)
+	      (lambda ()
+		(enable-paredit-mode)
+		(define-key evil-normal-state-local-map "L" #'paredit-forward)
+		(define-key evil-normal-state-local-map "H" #'paredit-backward)
+		(define-key evil-normal-state-local-map "J" #'paredit-forward-down)
+		(define-key evil-normal-state-local-map "K" #'paredit-backward-up))))
 #+END_SRC
 *** Scheme
 #+BEGIN_SRC emacs-lisp
