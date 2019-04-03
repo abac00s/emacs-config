@@ -139,7 +139,8 @@ Make the leader key work in problematic modes.
 #+BEGIN_SRC emacs-lisp
   (defvar lisp-modes '(emacs-lisp-mode
 		       lisp-interaction-mode
-		       scheme-mode))
+		       scheme-mode
+		       clojure-mode))
 
   (defun mode-to-hook (mode)
     (intern-soft (concat (symbol-name mode) "-hook")))
@@ -164,10 +165,10 @@ Make the leader key work in problematic modes.
     (add-hook (mode-to-hook mode)
 	      (lambda ()
 		(enable-paredit-mode)
-		(define-key evil-normal-state-local-map "L" #'paredit-forward)
-		(define-key evil-normal-state-local-map "H" #'paredit-backward)
-		(define-key evil-normal-state-local-map "J" #'paredit-forward-down)
-		(define-key evil-normal-state-local-map "K" #'paredit-backward-up))))
+		(local-set-key (kbd "M-l") #'paredit-forward)
+		(local-set-key (kbd "M-h") #'paredit-backward)
+		(local-set-key (kbd "M-j") #'paredit-forward-down)
+		(local-set-key (kbd "M-k") #'paredit-backward-up))))
 #+END_SRC
 *** Scheme
 #+BEGIN_SRC emacs-lisp
