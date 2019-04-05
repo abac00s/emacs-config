@@ -77,7 +77,8 @@ Define a leader map and add some basic command to it.
     "d l" 'next-buffer
     "d v" 'list-buffers
 
-    "a d" 'dired)
+    "a d" 'dired
+    "a q" 'save-buffers-kill-emacs)
 
   (define-key evil-normal-state-map (kbd leader-key) leader-map)
 #+END_SRC
