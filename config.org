@@ -29,6 +29,9 @@
   (require 'evil)
   (evil-mode 1)
 
+  (require 'evil-surround)
+  (global-evil-surround-mode 1)
+
   (require 'general)
   (general-evil-setup)
 #+END_SRC
