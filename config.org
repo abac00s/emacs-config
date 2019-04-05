@@ -136,6 +136,7 @@ Make the leader key work in problematic modes.
 *** Parentheses
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
+  (electric-pair-mode 1)
 #+END_SRC
 ** Lisp
 *** Modes
@@ -160,7 +161,7 @@ Make the leader key work in problematic modes.
   (dolist (mode lisp-modes)
     (add-hook (mode-to-hook mode) #'aggressive-indent-mode))
 #+END_SRC
-*** Paredit
+*** COMMENT Paredit
 #+BEGIN_SRC emacs-lisp
   (require 'paredit)
 
@@ -172,6 +173,13 @@ Make the leader key work in problematic modes.
 		(local-set-key (kbd "M-h") #'paredit-backward)
 		(local-set-key (kbd "M-j") #'paredit-forward-down)
 		(local-set-key (kbd "M-k") #'paredit-backward-up))))
+#+END_SRC
+*** Evil-cleverparens
+#+BEGIN_SRC emacs-lisp
+  (require 'evil-cleverparens)
+
+  (dolist (mode lisp-modes)
+    (add-hook (mode-to-hook mode) #'evil-cleverparens-mode))
 #+END_SRC
 *** Scheme
 #+BEGIN_SRC emacs-lisp
