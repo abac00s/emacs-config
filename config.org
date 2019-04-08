@@ -160,6 +160,26 @@
     "o" #'other-window
     "O" #'other-frame)
 #+END_SRC
+* Helm
+#+BEGIN_SRC emacs-lisp
+  (use-package helm
+    :ensure nil
+
+    :general
+
+    ("M-x" #'helm-M-x
+     "C-x b" #'helm-buffers-list
+     "C-x C-f" #'helm-find-files)
+
+    (my-leader-def
+      "SPC" #'helm-M-x
+      "d d" #'helm-buffers-list
+      "f f" #'helm-find-files)
+
+    (help-map
+     "v" #'helm-apropos
+     "f" #'helm-apropos))
+#+END_SRC
 * Programming
 ** General
 *** Completion
