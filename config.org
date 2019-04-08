@@ -49,7 +49,7 @@
     :config
     (evil-mode 1)
     (general-evil-setup)
-    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-w" "C-y")
+    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-w" "C-y" "TAB")
     (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "TAB")
 
     (general-imap "f" (general-key-dispatch 'self-insert-command
