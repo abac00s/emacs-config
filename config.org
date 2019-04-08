@@ -80,7 +80,10 @@
     (evil-declare-motion 'ace-jump-char-mode)
 
     :custom
-    (ac-auto-show-menu t))
+    (ac-auto-show-menu t)
+
+    :custom-face
+    (ace-jump-face-foreground ((t (:background "black" :foreground "yellow" :weight bold)))))
 #+END_SRC
 * Which-key
 #+BEGIN_SRC emacs-lisp
