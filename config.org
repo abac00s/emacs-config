@@ -9,11 +9,23 @@
 * .emacs.d
 ** Configuration files
 #+BEGIN_SRC emacs-lisp
+  (defvar my-config-org "~/.emacs.d/config.org")
+  (defvar my-config-el "~/.emacs.d/config.el")
+  (defvar my-custom-file "~/.emacs.d/init-custom.el")
+
   (defun my-open-emacs-config ()
     (interactive)
-    (find-file "~/.emacs.d/config.org"))
+    (find-file my-config-org))
 
-  (setq custom-file "~/.emacs.d/init-custom.el")
+  (defun my-compile-emacs-config ()
+    (interactive)
+    (org-babel-tangle-file my-config-org my-config-el)
+    (if (byte-compile-file my-config-el)
+	(message "Compilation successful!")
+      (message "Compilation unsuccessful..."))
+    (with-current-buffer "*Compile-Log*" (kill-buffer-and-window)))
+
+  (setq custom-file my-custom-file)
   (unless (file-exists-p custom-file)
     (with-temp-buffer
       (write-file custom-file)))
