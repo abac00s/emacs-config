@@ -122,6 +122,7 @@
 * UI
 #+BEGIN_SRC emacs-lisp
   (use-package material-theme
+    :if window-system
     :config
     (load-theme 'material t))
 
