@@ -159,27 +159,79 @@
     "O" #'other-frame)
 #+END_SRC
 * Helm
+** Basic
 #+BEGIN_SRC emacs-lisp
   (use-package helm
-    :ensure nil
+    :init
+    (require 'helm-config)
+    (require 'helm-eshell)
 
     :general
-
     ("M-x" #'helm-M-x
-     "C-x b" #'helm-buffers-list
-     "C-x C-f" #'helm-find-files)
+     "C-x b" #'helm-mini
+     "C-x C-b" #'helm-mini
+     "C-x C-f" #'helm-find-files
+     "M-y" #'helm-show-kill-ring
+     "C-:" #'helm-eval-expression-with-eldoc)
 
     (my-leader-def
       "SPC" #'helm-M-x
-      "d d" #'helm-buffers-list
-      "f f" #'helm-find-files)
+      "d" #'helm-mini
+
+      "f f" #'helm-find-files
+      "f F" #'helm-find
+
+      "i i" #'helm-semantic-or-imenu
+      "i o" #'helm-occur
+      "i m" #'helm-all-mark-rings
+
+      "a t" #'helm-top)
 
     (help-map
      "v" #'helm-apropos
-     "f" #'helm-apropos))
+     "f" #'helm-apropos
+     "g" #'helm-google-suggest
+     "a" #'helm-apropos
+     "M" #'helm-man-woman)
+
+    (helm-map
+     "TAB" #'helm-execute-persistent-action
+     "C-i" #'helm-execute-persistent-action
+     "C-z" #'helm-select-action)
+
+    (general-def
+      :keymaps '(emacs-lisp-mode-map
+		 lisp-interaction-mode-map)
+      "<C-tab>" #'helm-lisp-completion-at-point)
+
+    (shell-mode-map "M-r" #'helm-comint-input-ring)
+
+    :custom
+    (helm-semantic-fuzzy-match t)
+    (helm-imenu-fuzzy-match t)
+    (helm-apropos-fuzzy-match t)
+    (helm-lisp-fuzzy-completion t)
+
+    :config
+    (helm-mode 1)
+
+    (add-hook 'eshell-mode-hook
+	      #'(lambda ()
+		  (local-set-key (kbd "M-r") #'helm-eshell-history))))
+#+END_SRC
+** Helm-descbinds
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-descbinds
+    :config (helm-descbinds-mode)
+    :general
+    (help-map "b" #'helm-descbinds))
 #+END_SRC
 * Programming
 ** General
+*** Semantic mode
+#+BEGIN_SRC emacs-lisp
+  (semantic-mode 1)
+#+END_SRC
 *** Completion
 #+BEGIN_SRC emacs-lisp
   (use-package auto-complete
