@@ -1,10 +1,12 @@
-* Package repositories
+* Package system
 #+BEGIN_SRC emacs-lisp
   (setq lexical-binding t)
 
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (package-initialize)
+
+  (eval-when-compile (require 'use-package))
 #+END_SRC
 * .emacs.d
 ** Configuration files
@@ -35,52 +37,77 @@
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
 #+END_SRC
+* General
+#+BEGIN_SRC emacs-lisp
+  (use-package general)
+#+END_SRC
 * Evil mode
-** Packages
 #+BEGIN_SRC emacs-lisp
-  (require 'evil)
-  (evil-mode 1)
+  (use-package evil
+    :after general
+  
+    :config
+    (evil-mode 1)
+    (general-evil-setup)
+    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-w" "C-y")
+    (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "TAB")
 
-  (require 'evil-surround)
-  (global-evil-surround-mode 1)
+    (general-imap "f" (general-key-dispatch 'self-insert-command
+			:timeout 0.5
+			"d" 'evil-normal-state))
 
-  (require 'general)
-  (general-evil-setup)
+    :custom
+    (evil-auto-indent nil)
+    (evil-cross-lines t)
+    (evil-disable-insert-state-bindings t)
+    (evil-move-beyond-eol t)
+    (evil-move-cursor-back nil))
 #+END_SRC
-** Customization variables
+** Evil-surround
 #+BEGIN_SRC emacs-lisp
-  (setq evil-auto-indent nil
-	evil-cross-lines t
-	evil-disable-insert-state-bindings t
-	evil-move-beyond-eol t
-	evil-move-cursor-back nil)
+  (use-package evil-surround
+    :after evil
+    :config (global-evil-surround-mode 1))
 #+END_SRC
-** Unmap unwanted keys
+* Ace-jump
 #+BEGIN_SRC emacs-lisp
-  (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-w" "C-y")
-  (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "TAB")
+  (use-package ace-jump-mode
+    :general
+    ("C-c" 'ace-jump-char-mode)
+    ('motion "f" 'ace-jump-char-mode)
+
+    :config
+    (evil-declare-motion 'ace-jump-char-mode)
+
+    :custom
+    (ac-auto-show-menu t))
 #+END_SRC
-** Use =f d= to escape insert state
+* Which-key
 #+BEGIN_SRC emacs-lisp
-  (general-imap "f" (general-key-dispatch 'self-insert-command
-                      :timeout 0.5
-                      "d" 'evil-normal-state))
+  (use-package which-key
+    :config (which-key-mode))
 #+END_SRC
 * Leader
 #+BEGIN_SRC emacs-lisp
-  (defvar my-leader-key "SPC")
-  (defvar my-leader-map (make-sparse-keymap))
+  (general-create-definer my-leader-def
+    :states '(motion)
+    :prefix "SPC")
 
-  (general-def my-leader-map
-    "SPC" 'execute-extended-command
-    "h" '(:keymap help-map)
-    "w" '(:keymap evil-window-map)
+  (my-leader-def
+    "" nil
+    "SPC" '(execute-extended-command :wk "M-x")
+    "h" '(:keymap help-map :wk "help")
+    "w" '(:keymap evil-window-map :wk "windows")
 
+    "f" '(:wk "files")
     "f s" 'save-buffer
     "f f" 'find-file
+
+    "f q" '(:wk "config")
     "f q q" 'my-open-emacs-config
     "f q c" 'my-compile-emacs-config
 
+    "d" '(:wk "buffers")
     "d d" 'switch-to-buffer
     "d h" 'previous-buffer
     "d l" 'next-buffer
@@ -88,45 +115,13 @@
 
     "a d" 'dired
     "a q" 'save-buffers-kill-emacs)
-
-  (general-def 'motion "SPC" '(:keymap my-leader-map))
-#+END_SRC
-* Ace-jump
-#+BEGIN_SRC emacs-lisp
-  (require 'ace-jump-mode)
-
-  (setq ac-auto-show-menu t)
-
-  (general-def "C-j" 'ace-jump-char-mode)
-
-  (evil-declare-motion 'ace-jump-char-mode)
-  (general-mmap "f" 'ace-jump-char-mode)
-#+END_SRC
-* Which-key
-** Package
-#+BEGIN_SRC emacs-lisp
-  (require 'which-key)
-  (which-key-mode)
-#+END_SRC
-** Add which-key names to leader keys
-#+BEGIN_SRC emacs-lisp
-  (defun my-set-leader-which-key-name (keys name)
-    (which-key-add-key-based-replacements (concat my-leader-key " " keys) name))
-
-  (defun my-set-leader-which-key-names (&rest args)
-    (unless (null args)
-      (my-set-leader-which-key-name (car args) (car (cdr args)))
-      (apply 'my-set-leader-which-key-names (cdr (cdr args)))))
-
-  (my-set-leader-which-key-names "SPC" "M-x"
-				 "f" "files"
-				 "d" "buffers"
-				 "w" "windows"
-				 "h" "help")
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'material t)
+  (use-package material-theme
+    :config
+    (load-theme 'material t))
+
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
   (menu-bar-mode 0)
@@ -138,56 +133,56 @@
 ** General
 *** Completion
 #+BEGIN_SRC emacs-lisp
-  (require 'auto-complete)
-  (ac-config-default)
+  (use-package auto-complete
+    :config
+    (ac-config-default))
 #+END_SRC
 *** Parentheses
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
   (electric-pair-mode 1)
 #+END_SRC
-** General lisp settings
-*** Modes
+*** Aggresive-indent
 #+BEGIN_SRC emacs-lisp
-  (defvar lisp-modes '(emacs-lisp-mode
-		       lisp-interaction-mode
-		       scheme-mode
-		       clojure-mode))
-
-  (defun mode-to-hook (mode)
-    (intern-soft (concat (symbol-name mode) "-hook")))
+  (use-package aggressive-indent
+    :hook ((emacs-lisp-mode
+	    lisp-interaction-mode
+	    scheme-mode
+	    clojure-mode)
+	   . aggressive-indent-mode))
 #+END_SRC
 *** Rainbow-delimiters
 #+BEGIN_SRC emacs-lisp
-  (require 'rainbow-delimiters)
-
-  (dolist (mode lisp-modes)
-    (add-hook (mode-to-hook mode) #'rainbow-delimiters-mode))
-#+END_SRC
-*** Aggresive-indent
-#+BEGIN_SRC emacs-lisp
-  (dolist (mode lisp-modes)
-    (add-hook (mode-to-hook mode) #'aggressive-indent-mode))
+  (use-package rainbow-delimiters
+    :hook ((emacs-lisp-mode
+	    lisp-interaction-mode
+	    scheme-mode
+	    clojure-mode)
+	   . rainbow-delimiters-mode))
 #+END_SRC
 *** Evil-cleverparens
 #+BEGIN_SRC emacs-lisp
-  (require 'evil-cleverparens)
-
-  (dolist (mode lisp-modes)
-    (add-hook (mode-to-hook mode) #'evil-cleverparens-mode))
+  (use-package evil-cleverparens
+    :hook ((emacs-lisp-mode
+	    lisp-interaction-mode
+	    scheme-mode
+	    clojure-mode)
+	   . evil-cleverparens-mode))
 #+END_SRC
 ** Scheme
 #+BEGIN_SRC emacs-lisp
-  (require 'geiser)
+  (use-package geiser
+    :defer t)
 #+END_SRC
 * Other modes
 ** Magit
  #+BEGIN_SRC emacs-lisp
-   (require 'magit)
-   (general-def my-leader-map "a g" 'magit-status)
-   (general-def "C-x g" 'magit-status)
+   (use-package magit
+     :general
+     (my-leader-def "a g" 'magit-status)
+     ("C-x g" 'magit-status))
  #+END_SRC
-** Auto-fill-mode
+** Org mode
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook #'auto-fill-mode)
 #+END_SRC
