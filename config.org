@@ -41,12 +41,17 @@
 #+END_SRC
 * General
 #+BEGIN_SRC emacs-lisp
-  (use-package general)
+  (use-package general
+    :config
+    (general-override-mode 1))
 #+END_SRC
 * Evil mode
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :after general
+
+    :init
+    (setq evil-want-keybinding nil)
 
     :config
     (evil-mode 1)
@@ -98,6 +103,7 @@
 #+BEGIN_SRC emacs-lisp
   (general-create-definer my-leader-def
     :states '(motion)
+    :keymap 'override
     :prefix "SPC")
 
   (my-leader-def
