@@ -23,7 +23,7 @@
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
 #+END_SRC
-* Evil mode and general keybindings
+* Evil mode
 ** Packages
 #+BEGIN_SRC emacs-lisp
   (require 'evil)
@@ -35,42 +35,39 @@
   (require 'general)
   (general-evil-setup)
 #+END_SRC
-** Ace-jump
+** Customization variables
 #+BEGIN_SRC emacs-lisp
-  (require 'ace-jump-mode)
-  (general-emap "C-j" 'ace-jump-char-mode)
-
-  (evil-declare-motion 'ace-jump-char-mode)
-  (general-nvmap "f" 'ace-jump-char-mode)
-  (general-def :states 'operator "f" 'ace-jump-char-mode)
+  (setq evil-auto-indent nil
+	evil-cross-lines t
+	evil-disable-insert-state-bindings t
+	evil-move-beyond-eol t
+	evil-move-cursor-back nil)
 #+END_SRC
-** Keybindings
+** Unmap unwanted keys
+#+BEGIN_SRC emacs-lisp
+  (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-w" "C-y")
+  (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "TAB")
+#+END_SRC
+** Use =f d= to escape insert state
 #+BEGIN_SRC emacs-lisp
   (general-imap "f" (general-key-dispatch 'self-insert-command
                       :timeout 0.5
                       "d" 'evil-normal-state))
 #+END_SRC
-
-Change the =TAB= behaviour in Evil normal state to the Emacs default.
-
+* Leader
 #+BEGIN_SRC emacs-lisp
-  (general-nmap "TAB" 'indent-for-tab-command)
-#+END_SRC
-** Leader keybindings
-Define a leader map and add some basic command to it.
+  (defvar my-leader-key "SPC")
+  (defvar my-leader-map (make-sparse-keymap))
 
-#+BEGIN_SRC emacs-lisp
-  (defvar leader-key "SPC")
-  (defvar leader-map (make-sparse-keymap))
-
-  (general-def :keymaps 'leader-map
+  (general-def my-leader-map
     "SPC" 'execute-extended-command
-    "h" (general-simulate-key "C-h" :state 'emacs)
-    "w" (general-simulate-key "C-w" :state 'normal)
+    "h" '(:keymap help-map)
+    "w" '(:keymap evil-window-map)
 
     "f s" 'save-buffer
     "f f" 'find-file
-    "f q" 'my-open-emacs-config
+    "f q q" 'my-open-emacs-config
+    "f q c" 'my-compile-emacs-config
 
     "d d" 'switch-to-buffer
     "d h" 'previous-buffer
@@ -80,19 +77,18 @@ Define a leader map and add some basic command to it.
     "a d" 'dired
     "a q" 'save-buffers-kill-emacs)
 
-  (define-key evil-normal-state-map (kbd leader-key) leader-map)
+  (general-def 'motion "SPC" '(:keymap my-leader-map))
 #+END_SRC
-
-Make the leader key work in problematic modes.
-
+* Ace-jump
 #+BEGIN_SRC emacs-lisp
-  (defmacro enable-leader-key (hook map)
-    `(add-hook ,hook (lambda ()
-		       (define-key ,map (kbd leader-key) leader-map))))
+  (require 'ace-jump-mode)
 
-  (enable-leader-key 'Info-mode-hook evil-motion-state-local-map)
-  (enable-leader-key 'help-mode-hook evil-motion-state-local-map)
-  (enable-leader-key 'dired-mode-hook evil-normal-state-local-map)
+  (setq ac-auto-show-menu t)
+
+  (general-def "C-j" 'ace-jump-char-mode)
+
+  (evil-declare-motion 'ace-jump-char-mode)
+  (general-mmap "f" 'ace-jump-char-mode)
 #+END_SRC
 * Which-key
 ** Package
@@ -100,22 +96,21 @@ Make the leader key work in problematic modes.
   (require 'which-key)
   (which-key-mode)
 #+END_SRC
-
 ** Add which-key names to leader keys
 #+BEGIN_SRC emacs-lisp
-  (defun set-leader-which-key-name (keys name)
-    (which-key-add-key-based-replacements (concat leader-key " " keys) name))
+  (defun my-set-leader-which-key-name (keys name)
+    (which-key-add-key-based-replacements (concat my-leader-key " " keys) name))
 
-  (defun set-leader-which-key-names (&rest args)
+  (defun my-set-leader-which-key-names (&rest args)
     (unless (null args)
-      (set-leader-which-key-name (car args) (car (cdr args)))
-      (apply 'set-leader-which-key-names (cdr (cdr args)))))
+      (my-set-leader-which-key-name (car args) (car (cdr args)))
+      (apply 'my-set-leader-which-key-names (cdr (cdr args)))))
 
-  (set-leader-which-key-names "SPC" "M-x"
-			      "f" "files"
-			      "d" "buffers"
-			      "w" "windows"
-			      "h" "help")
+  (my-set-leader-which-key-names "SPC" "M-x"
+				 "f" "files"
+				 "d" "buffers"
+				 "w" "windows"
+				 "h" "help")
 #+END_SRC
 * UI
 #+BEGIN_SRC emacs-lisp
@@ -139,7 +134,7 @@ Make the leader key work in problematic modes.
   (show-paren-mode 1)
   (electric-pair-mode 1)
 #+END_SRC
-** Lisp
+** General lisp settings
 *** Modes
 #+BEGIN_SRC emacs-lisp
   (defvar lisp-modes '(emacs-lisp-mode
@@ -162,19 +157,6 @@ Make the leader key work in problematic modes.
   (dolist (mode lisp-modes)
     (add-hook (mode-to-hook mode) #'aggressive-indent-mode))
 #+END_SRC
-*** COMMENT Paredit
-#+BEGIN_SRC emacs-lisp
-  (require 'paredit)
-
-  (dolist (mode lisp-modes)
-    (add-hook (mode-to-hook mode)
-	      (lambda ()
-		(enable-paredit-mode)
-		(local-set-key (kbd "M-l") #'paredit-forward)
-		(local-set-key (kbd "M-h") #'paredit-backward)
-		(local-set-key (kbd "M-j") #'paredit-forward-down)
-		(local-set-key (kbd "M-k") #'paredit-backward-up))))
-#+END_SRC
 *** Evil-cleverparens
 #+BEGIN_SRC emacs-lisp
   (require 'evil-cleverparens)
@@ -182,17 +164,17 @@ Make the leader key work in problematic modes.
   (dolist (mode lisp-modes)
     (add-hook (mode-to-hook mode) #'evil-cleverparens-mode))
 #+END_SRC
-*** Scheme
+** Scheme
 #+BEGIN_SRC emacs-lisp
   (require 'geiser)
 #+END_SRC
-* Magit
-#+BEGIN_SRC emacs-lisp
-  (require 'magit)
-  (general-def :keymaps 'leader-map "a g" 'magit-status)
-  (general-def "C-x g" 'magit-status)
-#+END_SRC
-* Org
+* Other modes
+** Magit
+ #+BEGIN_SRC emacs-lisp
+   (require 'magit)
+   (general-def my-leader-map "a g" 'magit-status)
+   (general-def "C-x g" 'magit-status)
+ #+END_SRC
 ** Auto-fill-mode
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook #'auto-fill-mode)
