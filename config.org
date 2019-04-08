@@ -132,6 +132,23 @@
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (setq frame-title-format '(multiple-frames "%b" "Emacs"))
 #+END_SRC
+* Windows and frames
+** Winner mode
+#+BEGIN_SRC emacs-lisp 
+  (winner-mode 1)
+#+END_SRC
+** Custom keybindings
+#+BEGIN_SRC emacs-lisp
+  (general-def evil-window-map
+    "u" #'winner-undo
+    "r" #'winner-redo
+    "N" #'make-frame-command
+    "Q" #'delete-frame)
+
+  (my-leader-def
+    "o" #'other-window
+    "O" #'other-frame)
+#+END_SRC
 * Programming
 ** General
 *** Completion
