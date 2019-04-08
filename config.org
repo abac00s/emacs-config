@@ -122,11 +122,7 @@
     "f q q" 'my-open-emacs-config
     "f q c" 'my-compile-emacs-config
 
-    "d" '(:wk "buffers")
-    "d d" 'switch-to-buffer
-    "d h" 'previous-buffer
-    "d l" 'next-buffer
-    "d v" 'list-buffers
+    "d" 'switch-to-buffer
 
     "a d" 'dired
     "a q" 'save-buffers-kill-emacs)
