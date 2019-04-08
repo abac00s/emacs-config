@@ -226,3 +226,19 @@
 	    #'(lambda ()
 		(define-key evil-normal-state-local-map "e" #'org-edit-src-exit)))
 #+END_SRC
+** Tetris
+#+BEGIN_SRC emacs-lisp
+  (evil-set-initial-state 'tetris-mode 'motion)
+  (general-def 'motion tetris-mode-map
+    "n" #'tetris-start-game
+    "p" #'tetris-pause-game
+    "q" #'tetris-end-game
+    "h" #'tetris-move-left
+    "j" #'tetris-move-down
+    "k" #'tetris-rotate-prev
+    "l" #'tetris-move-right
+    "<left>" #'tetris-move-left
+    "<down>" #'tetris-move-down
+    "<up>" #'tetris-rotate-prev
+    "<right>" #'tetris-move-right)
+#+END_SRC
