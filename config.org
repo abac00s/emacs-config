@@ -45,7 +45,7 @@
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :after general
-  
+
     :config
     (evil-mode 1)
     (general-evil-setup)
@@ -55,6 +55,8 @@
     (general-imap "f" (general-key-dispatch 'self-insert-command
 			:timeout 0.5
 			"d" 'evil-normal-state))
+
+    (general-mmap "," (general-simulate-key "C-c"))
 
     :custom
     (evil-auto-indent nil)
