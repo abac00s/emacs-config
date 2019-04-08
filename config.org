@@ -186,6 +186,15 @@
      ("C-x g" 'magit-status))
  #+END_SRC
 ** Org mode
+*** Auto fill mode
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook #'auto-fill-mode)
+#+END_SRC
+*** Org-edit-special
+#+BEGIN_SRC emacs-lisp
+  (general-nmap org-mode-map "e" #'org-edit-special)
+
+  (add-hook 'org-src-mode-hook
+	    #'(lambda ()
+		(define-key evil-normal-state-local-map "e" #'org-edit-src-exit)))
 #+END_SRC
