@@ -46,6 +46,7 @@
     (general-override-mode 1))
 #+END_SRC
 * Evil mode
+** Basic
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :after general
@@ -225,6 +226,18 @@
     :config (helm-descbinds-mode)
     :general
     (help-map "b" #'helm-descbinds))
+#+END_SRC
+** Helm-spotify-plus
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-spotify-plus
+    :after helm
+    :general
+    (my-leader-def
+      ";" '(:wk "spotify")
+      "; f" #'helm-spotify-plus
+      "; ;" #'helm-spotify-plus-toggle-play-pause
+      "; n" #'helm-spotify-plus-next
+      "; p" #'helm-spotify-plus-previous))
 #+END_SRC
 * Programming
 ** General
