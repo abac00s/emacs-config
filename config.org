@@ -43,32 +43,73 @@
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :config
-    (general-override-mode 1))
+    (general-override-mode))
+#+END_SRC
+* Which-key
+#+BEGIN_SRC emacs-lisp
+  (use-package which-key
+    :config (which-key-mode))
+
+  (defun my-wk-leader-keys (key name &rest rest)
+    (which-key-add-key-based-replacements (concat evil-leader/leader " " key) name)
+    (unless (null rest)
+      (apply #'my-wk-leader-keys rest)))
 #+END_SRC
 * Evil mode
-** Basic
+** Evil-leader
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-leader
+    :config
+    (global-evil-leader-mode)
+    (evil-leader/set-leader "<SPC>"))
+#+END_SRC
+*** Basic bindings
+#+BEGIN_SRC emacs-lisp
+  (general-def evil-leader--default-map
+    "SPC" #'execute-extended-command
+    "h" help-map
+    "w" evil-window-map
+    "TAB" #'previous-buffer
+
+    "f s" 'save-buffer
+    "f f" 'find-file
+
+    "f q q" 'my-open-emacs-config
+    "f q c" 'my-compile-emacs-config
+
+    "d" 'switch-to-buffer
+
+    "a d" 'dired
+    "a q" 'save-buffers-kill-emacs)
+
+  (my-wk-leader-keys
+   "SPC" "M-x"
+   "w" "windows"
+   "h" "help"
+   "f" "files")
+#+END_SRC
+** Evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
-    :after general
-
-    :init
-    (setq evil-want-keybinding nil)
+    :after (general evil-leader)
 
     :config
     (evil-mode 1)
     (general-evil-setup)
-    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-v" "C-w" "C-y" "TAB")
-    (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "TAB")
+    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-v" "C-w" "C-y" "TAB")
+    (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "M-." "TAB")
 
     (general-imap "f" (general-key-dispatch 'self-insert-command
-			:timeout 0.5
-			"d" 'evil-normal-state))
+                        :timeout 0.5
+                        "d" 'evil-normal-state))
 
     (general-mmap "," (general-simulate-key "C-c"))
     (general-mmap "C-S-v" #'evil-visual-block)
+    (general-mmap "g b" #'evil-jump-backward)
+
+    (evil-set-initial-state 'dired-mode 'motion)
 
     :custom
-    (evil-auto-indent nil)
     (evil-cross-lines t)
     (evil-disable-insert-state-bindings t)
     (evil-move-beyond-eol t)
@@ -78,7 +119,14 @@
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :after evil
-    :config (global-evil-surround-mode 1))
+    :config (global-evil-surround-mode 1)
+    :general
+    (general-def 'visual
+      "s" #'evil-surround-region
+      "S" #'evil-Surround-region)
+    (general-def 'normal
+      "s" #'evil-surround-edit
+      "S" #'evil-Surround-edit))
 #+END_SRC
 * Ace-jump
 #+BEGIN_SRC emacs-lisp
@@ -96,51 +144,44 @@
     :custom-face
     (ace-jump-face-foreground ((t (:background "black" :foreground "yellow" :weight bold)))))
 #+END_SRC
-* Which-key
-#+BEGIN_SRC emacs-lisp
-  (use-package which-key
-    :config (which-key-mode))
-#+END_SRC
-* Leader
-#+BEGIN_SRC emacs-lisp
-  (general-create-definer my-leader-def
-    :states '(motion)
-    :keymap 'override
-    :prefix "SPC")
-
-  (my-leader-def
-    "" nil
-    "SPC" '(execute-extended-command :wk "M-x")
-    "h" '(:keymap help-map :wk "help")
-    "w" '(:keymap evil-window-map :wk "windows")
-    "TAB" 'previous-buffer
-
-    "f" '(:wk "files")
-    "f s" 'save-buffer
-    "f f" 'find-file
-
-    "f q" '(:wk "config")
-    "f q q" 'my-open-emacs-config
-    "f q c" 'my-compile-emacs-config
-
-    "d" 'switch-to-buffer
-
-    "a d" 'dired
-    "a q" 'save-buffers-kill-emacs)
-#+END_SRC
 * UI
+** Theme
 #+BEGIN_SRC emacs-lisp
-  (use-package material-theme
+  (use-package zenburn-theme
     :if window-system
     :config
-    (load-theme 'material t))
-
+    (load-theme 'zenburn t))
+#+END_SRC
+** Mode line
+#+BEGIN_SRC emacs-lisp
+  (setq-default mode-line-format
+                '(:eval
+                  (format-mode-line
+                   (list "%e"
+                         mode-line-front-space
+                         mode-line-mule-info
+                         mode-line-client
+                         mode-line-modified
+                         mode-line-remote
+                         "  "
+                         ;; mode-line-frame-identification
+                         mode-line-buffer-identification
+                         "  "
+                         mode-line-position
+                         vc-mode
+                         " (%m)"
+                         mode-line-misc-info
+                         mode-line-end-spaces))))
+#+END_SRC
+** Other settings
+#+BEGIN_SRC emacs-lisp
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
   (menu-bar-mode 0)
-  (set-face-attribute 'default nil :family "Inconsolata" :height 140)
+  (set-face-attribute 'default nil :family "Inconsolata" :height 160)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (setq frame-title-format '(multiple-frames "%b" "Emacs"))
+  (column-number-mode 1)
 #+END_SRC
 * Windows and frames
 ** Winner mode
@@ -155,7 +196,7 @@
     "N" #'make-frame-command
     "Q" #'delete-frame)
 
-  (my-leader-def
+  (evil-leader/set-key
     "o" #'other-window
     "O" #'other-frame)
 #+END_SRC
@@ -175,18 +216,18 @@
      "M-y" #'helm-show-kill-ring
      "C-:" #'helm-eval-expression-with-eldoc)
 
-    (my-leader-def
-      "SPC" #'helm-M-x
-      "d" #'helm-mini
+    (evil-leader--default-map
+     "SPC" #'helm-M-x
+     "d" #'helm-mini
 
-      "f f" #'helm-find-files
-      "f F" #'helm-find
+     "f f" #'helm-find-files
+     "f F" #'helm-find
 
-      "i i" #'helm-semantic-or-imenu
-      "i o" #'helm-occur
-      "i m" #'helm-all-mark-rings
+     "i i" #'helm-semantic-or-imenu
+     "i o" #'helm-occur
+     "i m" #'helm-all-mark-rings
 
-      "a t" #'helm-top)
+     "a t" #'helm-top)
 
     (help-map
      "v" #'helm-apropos
@@ -202,10 +243,14 @@
 
     (general-def
       :keymaps '(emacs-lisp-mode-map
-		 lisp-interaction-mode-map)
+                 lisp-interaction-mode-map)
       "<C-tab>" #'helm-lisp-completion-at-point)
 
     (shell-mode-map "M-r" #'helm-comint-input-ring)
+
+    (general-def
+      :states '(motion)
+      "g s" #'helm-semantic-or-imenu)
 
     :custom
     (helm-semantic-fuzzy-match t)
@@ -217,8 +262,8 @@
     (helm-mode 1)
 
     (add-hook 'eshell-mode-hook
-	      #'(lambda ()
-		  (local-set-key (kbd "M-r") #'helm-eshell-history))))
+              #'(lambda ()
+                  (local-set-key (kbd "M-r") #'helm-eshell-history))))
 #+END_SRC
 ** Helm-descbinds
 #+BEGIN_SRC emacs-lisp
@@ -231,25 +276,35 @@
 #+BEGIN_SRC emacs-lisp
   (use-package helm-spotify-plus
     :after helm
+
     :general
-    (my-leader-def
-      ";" '(:wk "spotify")
-      "; f" #'helm-spotify-plus
-      "; ;" #'helm-spotify-plus-toggle-play-pause
-      "; n" #'helm-spotify-plus-next
-      "; p" #'helm-spotify-plus-previous))
+    (evil-leader--default-map
+     ";" '(:wk "spotify")
+     "; f" #'helm-spotify-plus
+     "; ;" #'helm-spotify-plus-toggle-play-pause
+     "; n" #'helm-spotify-plus-next
+     "; p" #'helm-spotify-plus-previous)
+
+    :config
+    (my-wk-leader-keys ";" "spotify"))
 #+END_SRC
 * Programming
 ** General
-*** Semantic mode
+*** Indentation
 #+BEGIN_SRC emacs-lisp
-  (semantic-mode 1)
-#+END_SRC
-*** Completion
-#+BEGIN_SRC emacs-lisp
-  (use-package auto-complete
+  (setq-default tab-width 4
+                indent-tabs-mode nil)
+
+  (general-def "RET" #'newline-and-indent)
+
+  (use-package dtrt-indent
     :config
-    (ac-config-default))
+    (dtrt-indent-mode 1))
+
+  (use-package ws-butler
+    :hook (prog-mode . ws-butler-mode))
+
+  (general-def "C-x w" #'whitespace-mode)
 #+END_SRC
 *** Parentheses
 #+BEGIN_SRC emacs-lisp
@@ -274,6 +329,10 @@
 	    clojure-mode)
 	   . rainbow-delimiters-mode))
 #+END_SRC
+*** HideShow
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'prog-mode-hook #'hs-minor-mode)
+#+END_SRC
 *** Evil-cleverparens
 #+BEGIN_SRC emacs-lisp
   (use-package evil-cleverparens
@@ -283,9 +342,114 @@
 	    clojure-mode)
 	   . evil-cleverparens-mode))
 #+END_SRC
+*** Semantic
+#+BEGIN_SRC emacs-lisp
+  (require 'semantic)
+
+  (global-semanticdb-minor-mode 1)
+  (global-semantic-idle-scheduler-mode 1)
+  (global-semantic-idle-summary-mode 1)
+
+  (semantic-mode 1)
+#+END_SRC
+*** Completion
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :config
+    (global-company-mode 1)
+    :custom
+    (company-idle-delay 0))
+
+
+  (use-package company-quickhelp
+    :after company
+    :config
+    (company-quickhelp-mode 1)
+    :custom
+    (company-quickhelp-delay 0.2))
+#+END_SRC
+** C/C++
+*** Gtags
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-gtags
+    :hook
+    ((c-mode
+      c++-mode
+      asm-mode
+      eshell-mode
+      dired-mode)
+     . helm-gtags-mode)
+
+    :custom
+    (helm-gtags-ignore-case t)
+    (helm-gtags-auto-update t)
+    (helm-gtags-pulse-at-cursor t)
+    (helm-gtags-prefix-key "\C-cg")
+    (helm-gtags-suggested-key-mapping t)
+
+    :general
+    (general-def
+      :keymap 'helm-gtags-mode-map
+      :states '(normal)
+      "g a" #'helm-gtags-tags-in-this-function
+      "g l" #'helm-gtags-select
+      "g ." #'helm-gtags-dwim
+      "g ," #'helm-gtags-pop-stack
+      "g <" #'helm-gtags-previous-history
+      "g >" #'helm-gtags-next-history))
+#+END_SRC
+*** function-args
+#+BEGIN_SRC emacs-lisp
+  (use-package function-args
+    :config
+    (fa-config-default)
+    (add-to-list 'auto-mode-alist '("\\.h\\'" . c++-mode))
+    (set-default 'semantic-case-fold t)
+
+    :general
+    (c++-mode-map "<C-tab>" #'moo-complete))
+#+END_SRC
+*** Completion
+#+BEGIN_SRC emacs-lisp
+  (use-package company-c-headers
+    :after company
+    :config
+    (add-to-list 'company-backends 'company-c-headers)
+    (add-to-list 'company-c-headers-path-system "/usr/include/c++/8/"))
+#+END_SRC
+*** Compilation
+#+BEGIN_SRC emacs-lisp
+  (general-def "<f5>"
+    #'(lambda ()
+        (interactive)
+        (setq-local compilation-read-command nil)
+        (call-interactively 'compile)))
+#+END_SRC
+*** GDB
+#+BEGIN_SRC emacs-lisp
+  (setq gdb-many-windows t
+        gdb-show-main t)
+#+END_SRC
+** Python
+*** Elpy
+#+BEGIN_SRC emacs-lisp
+  (use-package elpy
+    :config (elpy-enable)
+
+    :general
+    (general-def
+      :keymap 'python-mode-map
+      :states 'normal
+      "g d" #'elpy-goto-definition))
+#+END_SRC
 ** Scheme
 #+BEGIN_SRC emacs-lisp
   (use-package geiser
+    :defer t)
+#+END_SRC
+** Clojure
+#+BEGIN_SRC emacs-lisp
+  (use-package cider
     :defer t)
 #+END_SRC
 * Other modes
@@ -293,7 +457,7 @@
  #+BEGIN_SRC emacs-lisp
    (use-package magit
      :general
-     (my-leader-def "a g" 'magit-status)
+     (evil-leader--default-map "a g" 'magit-status)
      ("C-x g" 'magit-status))
  #+END_SRC
 ** Org mode
