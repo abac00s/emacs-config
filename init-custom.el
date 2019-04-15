@@ -20,21 +20,23 @@
  '(evil-disable-insert-state-bindings t)
  '(evil-move-beyond-eol t)
  '(evil-move-cursor-back nil)
+ '(org-return-follows-link t)
+ '(org-startup-indented t)
+ '(org-startup-with-inline-images t)
  '(package-selected-packages
    (quote
-    (evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil))))
+    (minions moody org-bullets evil-org ranger evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil)))
+ '(ranger-override-dired t)
+ '(ranger-override-dired-mode t)
+ '(ranger-show-literal nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ace-jump-face-foreground ((t (:background "black" :foreground "yellow" :weight bold))))
- '(rainbow-delimiters-depth-1-face ((t (:foreground "light steel blue"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "green yellow"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "orange3"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "cyan"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "green"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "orange"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "tan"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "slate gray"))))
- '(rainbow-delimiters-depth-9-face ((t (:foreground "white")))))
+ '(org-block ((t (:background "default" :foreground "#8bc34a"))))
+ '(org-block-begin-line ((t (:background "default" :foreground "#b3e5fc" :box nil))))
+ '(org-block-end-line ((t (:background "default" :foreground "#b3e5fc" :box nil))))
+ '(org-level-1 ((t (:inherit outline-1 :background "default" :box nil :weight bold :height 1.3))))
+ '(org-level-2 ((t (:inherit outline-2 :background "default" :box nil :height 1.2)))))

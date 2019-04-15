@@ -1,17 +1,40 @@
-* Package system
+* =lexical-binding=
+
 #+BEGIN_SRC emacs-lisp
   (setq lexical-binding t)
+#+END_SRC
 
+* Repositories and =use-package=
+
+** Repositories
+
+#+BEGIN_SRC emacs-lisp
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (package-initialize)
+#+END_SRC
 
+** =use-package=
+
+#+BEGIN_SRC emacs-lisp
   (eval-when-compile (require 'use-package))
   (require 'use-package-ensure)
   (setq use-package-always-ensure t)
 #+END_SRC
-* .emacs.d
-** Configuration files
+
+* Use sensible-defaults.el
+
+Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for some basic settings.
+
+#+BEGIN_SRC emacs-lisp
+  (load-file "~/.emacs.d/res/sensible-defaults.el")
+  (sensible-defaults/use-all-settings)
+  (sensible-defaults/use-all-keybindings)
+  (setq visible-bell nil)
+#+END_SRC
+
+* Editing settings
+
 #+BEGIN_SRC emacs-lisp
   (defvar my-config-org "~/.emacs.d/config.org")
   (defvar my-config-el "~/.emacs.d/config.el")
@@ -35,35 +58,51 @@
       (write-file custom-file)))
   (load-file custom-file)
 #+END_SRC
-** Backups
+
+* Backups
+
 #+BEGIN_SRC emacs-lisp
   (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
 #+END_SRC
-* General
+
+* =general=
+
 #+BEGIN_SRC emacs-lisp
   (use-package general
     :config
     (general-override-mode))
 #+END_SRC
-* Which-key
+
+* =which-key=
+
+** Setup
+
 #+BEGIN_SRC emacs-lisp
   (use-package which-key
     :config (which-key-mode))
+#+END_SRC
 
+** Naming =evil-leader= keys
+
+#+BEGIN_SRC emacs-lisp
   (defun my-wk-leader-keys (key name &rest rest)
     (which-key-add-key-based-replacements (concat evil-leader/leader " " key) name)
     (unless (null rest)
       (apply #'my-wk-leader-keys rest)))
 #+END_SRC
-* Evil mode
-** Evil-leader
+
+* =evil-leader=
+
+** Setup
+
 #+BEGIN_SRC emacs-lisp
   (use-package evil-leader
     :config
     (global-evil-leader-mode)
     (evil-leader/set-leader "<SPC>"))
 #+END_SRC
-*** Basic bindings
+
+** Basic bindings
 #+BEGIN_SRC emacs-lisp
   (general-def evil-leader--default-map
     "SPC" #'execute-extended-command
@@ -88,7 +127,11 @@
    "h" "help"
    "f" "files")
 #+END_SRC
-** Evil
+
+* =evil-mode=
+
+** =evil=
+
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :after (general evil-leader)
@@ -115,7 +158,9 @@
     (evil-move-beyond-eol t)
     (evil-move-cursor-back nil))
 #+END_SRC
-** Evil-surround
+
+** =evil-surround=
+
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :after evil
@@ -128,7 +173,22 @@
       "s" #'evil-surround-edit
       "S" #'evil-Surround-edit))
 #+END_SRC
-* Ace-jump
+
+** =evil-org=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-org
+    :after org
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+              (lambda () (evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+#+END_SRC
+
+* =ace-jump=
+
 #+BEGIN_SRC emacs-lisp
   (use-package ace-jump-mode
     :general
@@ -144,51 +204,68 @@
     :custom-face
     (ace-jump-face-foreground ((t (:background "black" :foreground "yellow" :weight bold)))))
 #+END_SRC
+
 * UI
-** Theme
-#+BEGIN_SRC emacs-lisp
-  (use-package zenburn-theme
-    :if window-system
-    :config
-    (load-theme 'zenburn t))
-#+END_SRC
-** Mode line
-#+BEGIN_SRC emacs-lisp
-  (setq-default mode-line-format
-                '(:eval
-                  (format-mode-line
-                   (list "%e"
-                         mode-line-front-space
-                         mode-line-mule-info
-                         mode-line-client
-                         mode-line-modified
-                         mode-line-remote
-                         "  "
-                         ;; mode-line-frame-identification
-                         mode-line-buffer-identification
-                         "  "
-                         mode-line-position
-                         vc-mode
-                         " (%m)"
-                         mode-line-misc-info
-                         mode-line-end-spaces))))
-#+END_SRC
-** Other settings
+
+** Toolbar, menu bar, scroll bar
+
 #+BEGIN_SRC emacs-lisp
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
   (menu-bar-mode 0)
-  (set-face-attribute 'default nil :family "Inconsolata" :height 160)
+#+END_SRC
+
+** Frames
+
+#+BEGIN_SRC emacs-lisp
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   (setq frame-title-format '(multiple-frames "%b" "Emacs"))
-  (column-number-mode 1)
 #+END_SRC
-* Windows and frames
+
+** Theme
+
+#+BEGIN_SRC emacs-lisp
+  (use-package material-theme
+    :config
+    (load-theme 'material t))
+#+END_SRC
+
+** Mode line
+
+#+BEGIN_SRC emacs-lisp
+  (column-number-mode 1)
+
+  (use-package minions
+    :config
+    (setq minions-mode-line-lighter ""
+          minions-mode-line-delimiters '("" . ""))
+    (minions-mode 1))
+
+  (setq evil-mode-line-format nil)
+#+END_SRC
+
+** Prettify symbols
+
+#+BEGIN_SRC emacs-lisp
+  (global-prettify-symbols-mode t)
+#+END_SRC
+
+** Font
+
+#+BEGIN_SRC emacs-lisp
+  (set-face-attribute 'default nil :family "Inconsolata" :height 160)
+#+END_SRC
+
+* Windows and frames management
+
 ** Winner mode
-#+BEGIN_SRC emacs-lisp 
+
+#+BEGIN_SRC emacs-lisp
   (winner-mode 1)
 #+END_SRC
+
 ** Custom keybindings
+
 #+BEGIN_SRC emacs-lisp
   (general-def evil-window-map
     "u" #'winner-undo
@@ -200,8 +277,11 @@
     "o" #'other-window
     "O" #'other-frame)
 #+END_SRC
-* Helm
-** Basic
+
+* =helm=
+
+** =helm=
+
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :init
@@ -265,14 +345,18 @@
               #'(lambda ()
                   (local-set-key (kbd "M-r") #'helm-eshell-history))))
 #+END_SRC
-** Helm-descbinds
+
+** =helm-descbinds=
+
 #+BEGIN_SRC emacs-lisp
   (use-package helm-descbinds
+    :after helm
     :config (helm-descbinds-mode)
     :general
     (help-map "b" #'helm-descbinds))
 #+END_SRC
-** Helm-spotify-plus
+** =helm-spotify-plus=
+
 #+BEGIN_SRC emacs-lisp
   (use-package helm-spotify-plus
     :after helm
@@ -288,9 +372,11 @@
     :config
     (my-wk-leader-keys ";" "spotify"))
 #+END_SRC
-* Programming
-** General
-*** Indentation
+
+* General editing
+
+** Indentation
+
 #+BEGIN_SRC emacs-lisp
   (setq-default tab-width 4
                 indent-tabs-mode nil)
@@ -300,18 +386,26 @@
   (use-package dtrt-indent
     :config
     (dtrt-indent-mode 1))
+#+END_SRC
 
+** Whitespaces
+
+#+BEGIN_SRC emacs-lisp
   (use-package ws-butler
     :hook (prog-mode . ws-butler-mode))
 
   (general-def "C-x w" #'whitespace-mode)
 #+END_SRC
-*** Parentheses
+
+** Parentheses
+
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode 1)
   (electric-pair-mode 1)
 #+END_SRC
-*** Aggresive-indent
+
+** =aggresive-indent=
+
 #+BEGIN_SRC emacs-lisp
   (use-package aggressive-indent
     :hook ((emacs-lisp-mode
@@ -320,7 +414,9 @@
 	    clojure-mode)
 	   . aggressive-indent-mode))
 #+END_SRC
-*** Rainbow-delimiters
+
+** =rainbow-delimiters=
+
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-delimiters
     :hook ((emacs-lisp-mode
@@ -329,11 +425,15 @@
 	    clojure-mode)
 	   . rainbow-delimiters-mode))
 #+END_SRC
-*** HideShow
+
+** Folding
+
 #+BEGIN_SRC emacs-lisp
   (add-hook 'prog-mode-hook #'hs-minor-mode)
 #+END_SRC
-*** Evil-cleverparens
+
+** =evil-cleverparens=
+
 #+BEGIN_SRC emacs-lisp
   (use-package evil-cleverparens
     :hook ((emacs-lisp-mode
@@ -342,7 +442,9 @@
 	    clojure-mode)
 	   . evil-cleverparens-mode))
 #+END_SRC
-*** Semantic
+
+** =semantic=
+
 #+BEGIN_SRC emacs-lisp
   (require 'semantic)
 
@@ -352,7 +454,9 @@
 
   (semantic-mode 1)
 #+END_SRC
-*** Completion
+
+** =company=
+
 #+BEGIN_SRC emacs-lisp
   (use-package company
     :config
@@ -368,8 +472,13 @@
     :custom
     (company-quickhelp-delay 0.2))
 #+END_SRC
+
+* Languages
+
 ** C/C++
-*** Gtags
+
+*** =helm-gtags=
+
 #+BEGIN_SRC emacs-lisp
   (use-package helm-gtags
     :hook
@@ -398,7 +507,9 @@
       "g <" #'helm-gtags-previous-history
       "g >" #'helm-gtags-next-history))
 #+END_SRC
-*** function-args
+
+*** =function-args=
+
 #+BEGIN_SRC emacs-lisp
   (use-package function-args
     :config
@@ -409,7 +520,9 @@
     :general
     (c++-mode-map "<C-tab>" #'moo-complete))
 #+END_SRC
+
 *** Completion
+
 #+BEGIN_SRC emacs-lisp
   (use-package company-c-headers
     :after company
@@ -417,7 +530,9 @@
     (add-to-list 'company-backends 'company-c-headers)
     (add-to-list 'company-c-headers-path-system "/usr/include/c++/8/"))
 #+END_SRC
+
 *** Compilation
+
 #+BEGIN_SRC emacs-lisp
   (general-def "<f5>"
     #'(lambda ()
@@ -425,13 +540,18 @@
         (setq-local compilation-read-command nil)
         (call-interactively 'compile)))
 #+END_SRC
+
 *** GDB
+
 #+BEGIN_SRC emacs-lisp
   (setq gdb-many-windows t
         gdb-show-main t)
 #+END_SRC
+
 ** Python
+
 *** Elpy
+
 #+BEGIN_SRC emacs-lisp
   (use-package elpy
     :config (elpy-enable)
@@ -442,30 +562,88 @@
       :states 'normal
       "g d" #'elpy-goto-definition))
 #+END_SRC
+
 ** Scheme
+
 #+BEGIN_SRC emacs-lisp
   (use-package geiser
     :defer t)
 #+END_SRC
+
 ** Clojure
+
 #+BEGIN_SRC emacs-lisp
   (use-package cider
     :defer t)
 #+END_SRC
-* Other modes
-** Magit
- #+BEGIN_SRC emacs-lisp
-   (use-package magit
-     :general
-     (evil-leader--default-map "a g" 'magit-status)
-     ("C-x g" 'magit-status))
- #+END_SRC
-** Org mode
-*** Auto fill mode
+* Spelling
+** =flyspell-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (dolist (hook '(org-mode-hook))
+    (add-hook hook #'flyspell-mode))
+#+END_SRC
+
+** =flyspell-prog-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (dolist (hook '(c++-mode-hook
+                  c-mode-hook
+                  clojure-mode-hook
+                  emacs-lisp-mode-hook
+                  scheme-mode-hook
+                  python-mode-hook))
+    (add-hook hook #'flyspell-prog-mode))
+#+END_SRC
+
+** Keybindings
+
+#+BEGIN_SRC emacs-lisp
+  (general-def
+    "C-<f8>" #'ispell-word
+    "<f8>" #'(lambda ()
+               (interactive)
+               (flyspell-goto-next-error)
+               (ispell-word)))
+#+END_SRC
+
+* Org mode
+
+** Appearance
+
+*** =org-bullets=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package org-bullets
+    :hook (org-mode . org-bullets-mode))
+#+END_SRC
+
+*** =org-ellipsis=
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-ellipsis "⤵")
+#+END_SRC
+
+*** LaTeX preview
+#+BEGIN_SRC emacs-lisp
+  (setq org-latex-create-formula-image-program 'dvipng)
+  (setq org-latex-preview-ltxpng-directory "/tmp/ltxpng/")
+
+  (add-hook 'org-mode-hook
+            #'(lambda () (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))))
+
+  (general-def org-mode-map "C-c d" #'org-toggle-latex-fragment)
+#+END_SRC
+** =auto-fill-mode=
+
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook #'auto-fill-mode)
 #+END_SRC
-*** Org-edit-special
+
+** Source code
+
+*** Use =e= in normal mode to =edit-special=
+
 #+BEGIN_SRC emacs-lisp
   (general-nmap org-mode-map "e" #'org-edit-special)
 
@@ -473,7 +651,41 @@
 	    #'(lambda ()
 		(define-key evil-normal-state-local-map "e" #'org-edit-src-exit)))
 #+END_SRC
+
+*** Open in current window
+
+#+BEGIN_SRC emacs-lisp
+  (setq org-src-window-setup 'current-window)
+#+END_SRC
+
+** =electric-quote-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'org-mode-hook #'electric-quote-mode)
+#+END_SRC
+
+* Custom keybindings
+
+** Magit
+
+ #+BEGIN_SRC emacs-lisp
+   (use-package magit
+     :general
+     (evil-leader--default-map "a g" 'magit-status)
+     ("C-x g" 'magit-status))
+ #+END_SRC
+
+** Ranger
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ranger
+    :general
+    (evil-leader--default-map
+     "a r" #'ranger))
+#+END_SRC
+
 ** Tetris
+
 #+BEGIN_SRC emacs-lisp
   (evil-set-initial-state 'tetris-mode 'motion)
   (general-def 'motion tetris-mode-map
