@@ -4,8 +4,7 @@
   (setq lexical-binding t)
 #+END_SRC
 
-* Repositories and =use-package=
-
+* Repositories, =use-package= and =load-path=
 ** Repositories
 
 #+BEGIN_SRC emacs-lisp
@@ -22,6 +21,10 @@
   (setq use-package-always-ensure t)
 #+END_SRC
 
+** =load-path=
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path "~/.emacs.d/res")
+#+END_SRC
 * Use sensible-defaults.el
 
 Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for some basic settings.
