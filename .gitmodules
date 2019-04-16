@@ -1,0 +1,3 @@
+[submodule "my-plugins/org-var-pitch"]
+	path = my-plugins/org-var-pitch
+	url = https://github.com/abac00s/org-var-pitch.git
