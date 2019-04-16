@@ -658,16 +658,18 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (add-hook 'org-mode-hook #'variable-pitch-mode)
 #+END_SRC
 
-** Source code
-
-*** Use =e= in normal mode to =edit-special=
+** =visual-line-mode=
 
 #+BEGIN_SRC emacs-lisp
-  (general-nmap org-mode-map "e" #'org-edit-special)
+  (add-hook 'org-mode-hook #'visual-line-mode)
+#+END_SRC
 
-  (add-hook 'org-src-mode-hook
-	    #'(lambda ()
-		(define-key evil-normal-state-local-map "e" #'org-edit-src-exit)))
+** Source code
+*** Use =C-c e= to =edit-special=
+
+#+BEGIN_SRC emacs-lisp
+  (general-def org-mode-map "C-c e" #'org-edit-special)
+  (general-def org-src-mode-map "C-c e" #'org-edit-src-exit)
 #+END_SRC
 
 *** Open in current window
