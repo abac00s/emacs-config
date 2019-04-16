@@ -159,6 +159,17 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     (evil-move-cursor-back nil))
 #+END_SRC
 
+*** Make =j= and =k= move by visual lines
+
+#+BEGIN_SRC emacs-lisp
+  (evil-declare-motion #'next-line)
+  (evil-declare-motion #'previous-line)
+
+  (general-mmap
+    "j" #'next-line
+    "k" #'previous-line)
+#+END_SRC
+
 ** =evil-surround=
 
 #+BEGIN_SRC emacs-lisp
