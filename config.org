@@ -482,10 +482,14 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     (company-quickhelp-mode 1)
     :custom
     (company-quickhelp-delay 0.2))
+
+
+  (use-package company-box
+    :hook (org-mode . company-box-mode)
+    :custom (company-box-enable-icon nil))
 #+END_SRC
 
 * Languages
-
 ** C/C++
 
 *** =helm-gtags=
@@ -645,10 +649,15 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
   (general-def org-mode-map "C-c d" #'org-toggle-latex-fragment)
 #+END_SRC
-** =auto-fill-mode=
+*** =org-var-pitch=
+
+[[https://github.com/abac00s/org-var-pitch][My simple plugin]], which allows to mix variable pitch and fixed pitch fonts in Org Mode.
 
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'org-mode-hook #'auto-fill-mode)
+  (add-to-list 'load-path "~/.emacs.d/my-plugins/org-var-pitch")
+  (require 'org-var-pitch)
+  (org-var-pitch-init)
+  (add-hook 'org-mode-hook #'variable-pitch-mode)
 #+END_SRC
 
 ** Source code
