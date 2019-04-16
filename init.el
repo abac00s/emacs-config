@@ -1,1 +1,1 @@
-(load-file "~/.emacs.d/config.elc")
+(org-babel-load-file "~/.emacs.d/config.org")
