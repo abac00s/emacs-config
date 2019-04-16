@@ -132,8 +132,8 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * =evil-mode=
-
 ** =evil=
+*** Basic
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -220,7 +220,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * UI
-
 ** Toolbar, menu bar, scroll bar
 
 #+BEGIN_SRC emacs-lisp
@@ -293,7 +292,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * =helm=
-
 ** =helm=
 
 #+BEGIN_SRC emacs-lisp
@@ -388,7 +386,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * General editing
-
 ** Indentation
 
 #+BEGIN_SRC emacs-lisp
@@ -626,9 +623,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * Org mode
-
 ** Appearance
-
 *** =org-bullets=
 
 #+BEGIN_SRC emacs-lisp
@@ -642,7 +637,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (setq org-ellipsis "⤵")
 #+END_SRC
 
-*** LaTeX preview
+*** \LaTeX preview
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-create-formula-image-program 'dvipng)
   (setq org-latex-preview-ltxpng-directory "/tmp/ltxpng/")
