@@ -269,7 +269,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * Windows and frames management
-
 ** Winner mode
 
 #+BEGIN_SRC emacs-lisp
@@ -447,10 +446,12 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+BEGIN_SRC emacs-lisp
   (use-package evil-cleverparens
     :hook ((emacs-lisp-mode
-	    lisp-interaction-mode
-	    scheme-mode
-	    clojure-mode)
-	   . evil-cleverparens-mode))
+            lisp-interaction-mode
+            scheme-mode
+            clojure-mode)
+           . evil-cleverparens-mode)
+    :config
+    (general-unbind evil-cleverparens-mode-map 'normal #'helm-show-kill-ring))
 #+END_SRC
 
 ** =semantic=
