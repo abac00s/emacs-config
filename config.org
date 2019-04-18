@@ -206,7 +206,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+BEGIN_SRC emacs-lisp
   (use-package ace-jump-mode
     :general
-    ("C-c" 'ace-jump-char-mode)
     ('motion "f" 'ace-jump-char-mode)
 
     :config
@@ -623,6 +622,17 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * Org mode
+** Basic
+
+#+BEGIN_SRC emacs-lisp
+  (require 'org)
+
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-ca" 'org-agenda)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-cb" 'org-switchb)
+#+END_SRC
+
 ** Appearance
 *** =org-bullets=
 

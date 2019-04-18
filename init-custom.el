@@ -20,7 +20,10 @@
  '(evil-disable-insert-state-bindings t)
  '(evil-move-beyond-eol t)
  '(evil-move-cursor-back nil)
+ '(org-M-RET-may-split-line (quote ((default))))
+ '(org-agenda-files (quote ("~/o" "~/o/projects" "~/o/personal" "~/o/notes")))
  '(org-return-follows-link t)
+ '(org-special-ctrl-a/e t)
  '(org-startup-indented t)
  '(org-startup-with-inline-images t)
  '(package-selected-packages
