@@ -42,4 +42,4 @@
  '(org-block-end-line ((t (:background "default" :box nil))))
  '(org-level-1 ((t (:background "default" :box nil))))
  '(org-level-2 ((t (:background "default" :box nil))))
- '(variable-pitch ((t (:family "MathJax_Main")))))
+ '(variable-pitch ((t (:family "Tex Gyre Bonum")))))
