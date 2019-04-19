@@ -610,6 +610,13 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
 **** Folding
 
+#+BEGIN_SRC emacs-lisp
+  (add-hook 'web-mode-hook
+            #'(lambda () (evil-define-key 'normal 'local
+                      (kbd "z a") #'web-mode-fold-or-unfold
+                      (kbd "z k") #'web-mode-element-children-fold-or-unfold)))
+#+END_SRC
+
 * Spelling
 ** =flyspell-mode=
 
@@ -686,7 +693,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (require 'org-var-pitch)
   (org-var-pitch-init)
 
-  (general-def org-mode-map "C-c v" #'variable-pitch-mode)
+  (general-def org-mode-map "C-c v" #'org-var-pitch-mode)
 #+END_SRC
 
 ** =visual-line-mode=
