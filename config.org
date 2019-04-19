@@ -591,6 +591,25 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (use-package cider
     :defer t)
 #+END_SRC
+
+** Web development
+*** =web-mode=
+**** Basic
+
+#+BEGIN_SRC emacs-lisp
+  (use-package web-mode
+    :mode ("\\.phtml\\'"
+           "\\.tpl\\.php\\'"
+           "\\.[agj]sp\\'"
+           "\\.as[cp]x\\'"
+           "\\.erb\\'"
+           "\\.mustache\\'"
+           "\\.djhtml\\'"
+           "\\.html?\\'"))
+#+END_SRC
+
+**** Folding
+
 * Spelling
 ** =flyspell-mode=
 
@@ -666,7 +685,8 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (add-to-list 'load-path "~/.emacs.d/my-plugins/org-var-pitch")
   (require 'org-var-pitch)
   (org-var-pitch-init)
-  (add-hook 'org-mode-hook #'variable-pitch-mode)
+
+  (general-def org-mode-map "C-c v" #'variable-pitch-mode)
 #+END_SRC
 
 ** =visual-line-mode=
