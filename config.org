@@ -103,6 +103,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     "h" help-map
     "w" evil-window-map
     "TAB" #'previous-buffer
+    "'" #'shell
 
     "f s" 'save-buffer
     "f f" 'find-file
@@ -749,4 +750,44 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     "<down>" #'tetris-move-down
     "<up>" #'tetris-rotate-prev
     "<right>" #'tetris-move-right)
+#+END_SRC
+
+** Shell
+
+#+BEGIN_SRC emacs-lisp
+  (general-def 'normal shell-mode-map
+    "C-p" #'comint-previous-input
+    "C-n" #'comint-next-input
+    "C-k" #'comint-previous-input
+    "C-j" #'comint-next-input
+    "g k" #'comint-previous-prompt
+    "g j" #'comint-next-prompt)
+
+  (general-def 'insert shell-mode-map
+    "C-p" #'comint-previous-input
+    "C-n" #'comint-next-input
+    "C-k" #'comint-previous-input
+    "C-j" #'comint-next-input)
+#+END_SRC
+
+** Eshell
+
+#+BEGIN_SRC emacs-lisp
+  ;; (add-hook 'eshell-mode-hook
+  ;; (lambda () (evil-define-key 'normal 'local
+  ;;         "C-p" #'eshell-previous-input
+  ;;         "C-n" #'eshell-next-input
+  ;;         "C-k" #'eshell-previous-input
+  ;;         "C-j" #'eshell-next-input
+  ;;         "g k" #'eshell-previous-prompt
+  ;;         "g j" #'eshell-next-prompt)))
+
+  (add-hook 'eshell-mode-hook
+            (lambda () (general-def 'normal eshell-mode-map
+                    "C-p" #'eshell-previous-input
+                    "C-n" #'eshell-next-input
+                    "C-k" #'eshell-previous-input
+                    "C-j" #'eshell-next-input
+                    "g k" #'eshell-previous-prompt
+                    "g j" #'eshell-next-prompt)))
 #+END_SRC
