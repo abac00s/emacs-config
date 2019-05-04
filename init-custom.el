@@ -29,7 +29,7 @@
  '(org-startup-with-inline-images t)
  '(package-selected-packages
    (quote
-    (emmet-mode web-mode visual-fill-column company-box spacemacs-theme minions moody org-bullets evil-org ranger evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil)))
+    (workgroups twilight-theme company-web minimal-theme emmet-mode web-mode visual-fill-column company-box spacemacs-theme minions moody org-bullets evil-org ranger evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil)))
  '(ranger-override-dired t)
  '(ranger-override-dired-mode t)
  '(ranger-show-literal nil))
