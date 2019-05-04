@@ -410,7 +410,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     (dtrt-indent-mode 1))
 #+END_SRC
 
-** Whitespaces
+** White spaces
 
 #+BEGIN_SRC emacs-lisp
   (use-package ws-butler
@@ -698,6 +698,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 *** \LaTeX preview
+
 #+BEGIN_SRC emacs-lisp
   (setq org-latex-create-formula-image-program 'dvipng)
   (setq org-latex-preview-ltxpng-directory "/tmp/ltxpng/")
@@ -735,7 +736,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * Custom keybindings
-
 ** Magit
 
  #+BEGIN_SRC emacs-lisp
