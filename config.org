@@ -134,7 +134,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     :config
     (evil-mode 1)
     (general-evil-setup)
-    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-v" "C-w" "C-y" "TAB")
+    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-S-o" "C-v" "C-w" "C-y" "TAB")
     (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "M-." "TAB")
 
     (general-imap "f" (general-key-dispatch 'self-insert-command
@@ -261,10 +261,20 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * Windows and frames management
-** Winner mode
+** =winner-mode=
 
 #+BEGIN_SRC emacs-lisp
   (winner-mode 1)
+#+END_SRC
+
+** COMMENT =workgroups=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package workgroups
+    :config
+    (setq wg-prefix-key (kbd "C-c w"))
+    (workgroups-mode 1)
+    (wg-load "~/.emacs.d/workgroups"))
 #+END_SRC
 
 ** Custom keybindings
@@ -279,6 +289,11 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (evil-leader/set-key
     "o" #'other-window
     "O" #'other-frame)
+
+  (general-def
+    "C-o" #'other-window
+    "C-S-o" #'other-frame)
+
 #+END_SRC
 
 * =helm=
