@@ -640,16 +640,15 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
                       (kbd "z a") #'web-mode-fold-or-unfold
                       (kbd "z k") #'web-mode-element-children-fold-or-unfold)))
 #+END_SRC
-
 * Spelling
-** =flyspell-mode=
+** COMMENT =flyspell-mode=
 
 #+BEGIN_SRC emacs-lisp
   (dolist (hook '(org-mode-hook))
     (add-hook hook #'flyspell-mode))
 #+END_SRC
 
-** =flyspell-prog-mode=
+** COMMENT =flyspell-prog-mode=
 
 #+BEGIN_SRC emacs-lisp
   (dolist (hook '(c++-mode-hook
