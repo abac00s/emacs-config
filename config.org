@@ -210,7 +210,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     (ace-jump-face-foreground ((t (:background "black" :foreground "yellow" :weight bold)))))
 #+END_SRC
 
-* UI
+* Appearance
 ** Toolbar, menu bar, scroll bar
 
 #+BEGIN_SRC emacs-lisp
@@ -229,9 +229,9 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 ** Theme
 
 #+BEGIN_SRC emacs-lisp
-  (use-package material-theme
+  (use-package twilight-theme
     :config
-    (load-theme 'material t))
+    (load-theme 'twilight t))
 #+END_SRC
 
 ** Mode line
@@ -257,7 +257,13 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 ** Font
 
 #+BEGIN_SRC emacs-lisp
-  (set-face-attribute 'default nil :family "Inconsolata" :height 160)
+  (set-face-attribute 'default nil :family "Inconsolata" :height 150)
+#+END_SRC
+
+** =visual-line-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (global-visual-line-mode 1)
 #+END_SRC
 
 * Windows and frames management
