@@ -806,3 +806,18 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
                     "g k" #'eshell-previous-prompt
                     "g j" #'eshell-next-prompt)))
 #+END_SRC
+* Window layout
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-triple-layout ()
+    "A layout with one main window on the left and two smaller on
+  the right."
+    (interactive)
+    (save-selected-window
+      (delete-other-windows)
+      (split-window-horizontally -45)
+      (other-window 1)
+      (select-window (split-window-vertically))))
+
+  (general-def "C-c w" #'my-triple-layout)
+#+END_SRC
