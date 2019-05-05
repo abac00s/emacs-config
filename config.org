@@ -239,11 +239,11 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+BEGIN_SRC emacs-lisp
   (column-number-mode 1)
 
-  (use-package minions
-    :config
-    (setq minions-mode-line-lighter ""
-          minions-mode-line-delimiters '("" . ""))
-    (minions-mode 1))
+  ;; (use-package minions
+  ;;   :config
+  ;;   (setq minions-mode-line-lighter ""
+  ;;         minions-mode-line-delimiters '("" . ""))
+  ;;   (minions-mode 1))
 
   (setq evil-mode-line-format nil)
 #+END_SRC
