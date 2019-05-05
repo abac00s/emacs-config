@@ -557,7 +557,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     :after company
     :config
     (add-to-list 'company-backends 'company-c-headers)
-    (add-to-list 'company-c-headers-path-system "/usr/include/c++/8/"))
+    (add-to-list 'company-c-headers-path-system "/usr/include/c++/6/"))
 #+END_SRC
 
 *** Compilation
