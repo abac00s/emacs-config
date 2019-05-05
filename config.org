@@ -234,6 +234,12 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     (load-theme 'twilight t))
 #+END_SRC
 
+** Cursor color
+
+#+BEGIN_SRC emacs-lisp
+  (set-cursor-color "yellow")
+#+END_SRC
+
 ** Mode line
 
 #+BEGIN_SRC emacs-lisp
