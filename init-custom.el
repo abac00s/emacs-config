@@ -29,7 +29,7 @@
  '(org-startup-with-inline-images t)
  '(package-selected-packages
    (quote
-    (workgroups twilight-theme company-web minimal-theme emmet-mode web-mode visual-fill-column company-box spacemacs-theme minions moody org-bullets evil-org ranger evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil)))
+    (yasnippet workgroups twilight-theme company-web minimal-theme emmet-mode web-mode visual-fill-column company-box spacemacs-theme minions moody org-bullets evil-org ranger evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil)))
  '(ranger-override-dired t)
  '(ranger-override-dired-mode t)
  '(ranger-show-literal nil))
@@ -39,7 +39,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ace-jump-face-foreground ((t (:background "black" :foreground "yellow" :weight bold))))
- '(org-block-begin-line ((t (:background "default" :box nil))))
- '(org-block-end-line ((t (:background "default" :box nil))))
+ '(org-block-begin-line ((t (:background "default" :box nil))) t)
+ '(org-block-end-line ((t (:background "default" :box nil))) t)
  '(org-level-1 ((t (:background "default" :box nil))))
  '(org-level-2 ((t (:background "default" :box nil)))))
