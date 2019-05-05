@@ -273,16 +273,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (winner-mode 1)
 #+END_SRC
 
-** COMMENT =workgroups=
-
-#+BEGIN_SRC emacs-lisp
-  (use-package workgroups
-    :config
-    (setq wg-prefix-key (kbd "C-c w"))
-    (workgroups-mode 1)
-    (wg-load "~/.emacs.d/workgroups"))
-#+END_SRC
-
 ** Custom keybindings
 
 #+BEGIN_SRC emacs-lisp
