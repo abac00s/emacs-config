@@ -25,6 +25,7 @@
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path "~/.emacs.d/res")
 #+END_SRC
+
 * Use sensible-defaults.el
 
 Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for some basic settings.
@@ -37,16 +38,20 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 * Customization and configuration
+** Configuration file
 
 #+BEGIN_SRC emacs-lisp
   (defvar my-config-org "~/.emacs.d/config.org")
-  (defvar my-custom-file "~/.emacs.d/init-custom.el")
-
 
   (defun my-open-emacs-config ()
     (interactive)
     (find-file my-config-org))
+#+END_SRC
 
+** A file for saving automatically managed custom variables
+
+#+BEGIN_SRC emacs-lisp
+  (defvar my-custom-file "~/.emacs.d/init-custom.el")
 
   (setq custom-file my-custom-file)
   (unless (file-exists-p custom-file)
@@ -81,6 +86,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
 #+BEGIN_SRC emacs-lisp
   (defun my-wk-leader-keys (key name &rest rest)
+    "Set the custom name for leader keys in which-key."
     (which-key-add-key-based-replacements (concat evil-leader/leader " " key) name)
     (unless (null rest)
       (apply #'my-wk-leader-keys rest)))
@@ -100,27 +106,11 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+BEGIN_SRC emacs-lisp
   (general-def evil-leader--default-map
     "SPC" #'execute-extended-command
-    "h" help-map
-    "w" evil-window-map
     "TAB" #'previous-buffer
     "'" #'shell
+    "q" 'my-open-emacs-config)
 
-    "f s" 'save-buffer
-    "f f" 'find-file
-
-    "f q q" 'my-open-emacs-config
-    "f q c" 'my-compile-emacs-config
-
-    "d" 'switch-to-buffer
-
-    "a d" 'dired
-    "a q" 'save-buffers-kill-emacs)
-
-  (my-wk-leader-keys
-   "SPC" "M-x"
-   "w" "windows"
-   "h" "help"
-   "f" "files")
+  (my-wk-leader-keys "SPC" "M-x")
 #+END_SRC
 
 * =evil-mode=
@@ -134,7 +124,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     :config
     (evil-mode 1)
     (general-evil-setup)
-    (general-unbind 'motion "C-b" "C-d" "C-e" "C-m" "C-o" "C-S-o" "C-v" "C-w" "C-y" "TAB")
+    (general-unbind 'motion "C-b" "C-d" "C-e" "C-f" "C-m" "C-o" "C-S-o" "C-v" "C-y" "TAB")
     (general-unbind 'normal "C-i" "C-n" "C-p" "C-t" "M-." "TAB")
 
     (general-imap "f" (general-key-dispatch 'self-insert-command
@@ -165,7 +155,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     "k" #'previous-line)
 #+END_SRC
 
-** =evil-surround=
+* =evil-surround=
 
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
@@ -180,25 +170,12 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
       "S" #'evil-Surround-edit))
 #+END_SRC
 
-** =evil-org=
-
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-org
-    :after org
-    :config
-    (add-hook 'org-mode-hook 'evil-org-mode)
-    (add-hook 'evil-org-mode-hook
-              (lambda () (evil-org-set-key-theme)))
-    (require 'evil-org-agenda)
-    (evil-org-agenda-set-keys))
-#+END_SRC
-
 * =ace-jump=
 
 #+BEGIN_SRC emacs-lisp
   (use-package ace-jump-mode
     :general
-    ('motion "f" 'ace-jump-char-mode)
+    (override "C-k" #'ace-jump-char-mode)
 
     :config
     (evil-declare-motion 'ace-jump-char-mode)
@@ -244,13 +221,6 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
 #+BEGIN_SRC emacs-lisp
   (column-number-mode 1)
-
-  ;; (use-package minions
-  ;;   :config
-  ;;   (setq minions-mode-line-lighter ""
-  ;;         minions-mode-line-delimiters '("" . ""))
-  ;;   (minions-mode 1))
-
   (setq evil-mode-line-format nil)
 #+END_SRC
 
@@ -272,6 +242,12 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (global-visual-line-mode 1)
 #+END_SRC
 
+** =visual-fill-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package visual-fill-column)
+#+END_SRC
+
 * Windows and frames management
 ** =winner-mode=
 
@@ -288,14 +264,9 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     "N" #'make-frame-command
     "Q" #'delete-frame)
 
-  (evil-leader/set-key
-    "o" #'other-window
-    "O" #'other-frame)
-
   (general-def
     "C-o" #'other-window
     "C-S-o" #'other-frame)
-
 #+END_SRC
 
 * =helm=
@@ -317,16 +288,9 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 
     (evil-leader--default-map
      "SPC" #'helm-M-x
-     "d" #'helm-mini
-
-     "f f" #'helm-find-files
-     "f F" #'helm-find
-
      "i i" #'helm-semantic-or-imenu
      "i o" #'helm-occur
-     "i m" #'helm-all-mark-rings
-
-     "a t" #'helm-top)
+     "i m" #'helm-all-mark-rings)
 
     (help-map
      "v" #'helm-apropos
@@ -374,22 +338,16 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
     :general
     (help-map "b" #'helm-descbinds))
 #+END_SRC
-** =helm-spotify-plus=
+
+* Basic bindings
 
 #+BEGIN_SRC emacs-lisp
-  (use-package helm-spotify-plus
-    :after helm
-
-    :general
-    (evil-leader--default-map
-     ";" '(:wk "spotify")
-     "; f" #'helm-spotify-plus
-     "; ;" #'helm-spotify-plus-toggle-play-pause
-     "; n" #'helm-spotify-plus-next
-     "; p" #'helm-spotify-plus-previous)
-
-    :config
-    (my-wk-leader-keys ";" "spotify"))
+  (general-def
+    "C-f" #'helm-find-files
+    "C-s" #'save-buffer
+    "C-d" #'helm-mini
+    "C-t" #'previous-buffer
+    "C-S-t" #'next-buffer)
 #+END_SRC
 
 * General editing
@@ -422,6 +380,30 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (electric-pair-mode 1)
 #+END_SRC
 
+*** =evil-cleverparens=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-cleverparens
+    :hook ((emacs-lisp-mode
+            lisp-interaction-mode
+            scheme-mode
+            clojure-mode)
+           . evil-cleverparens-mode)
+    :config
+    (general-unbind evil-cleverparens-mode-map 'normal #'helm-show-kill-ring))
+#+END_SRC
+
+*** =rainbow-delimiters=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package rainbow-delimiters
+    :hook ((emacs-lisp-mode
+	    lisp-interaction-mode
+	    scheme-mode
+	    clojure-mode)
+	   . rainbow-delimiters-mode))
+#+END_SRC
+
 ** =aggresive-indent=
 
 #+BEGIN_SRC emacs-lisp
@@ -433,34 +415,10 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 	   . aggressive-indent-mode))
 #+END_SRC
 
-** =rainbow-delimiters=
-
-#+BEGIN_SRC emacs-lisp
-  (use-package rainbow-delimiters
-    :hook ((emacs-lisp-mode
-	    lisp-interaction-mode
-	    scheme-mode
-	    clojure-mode)
-	   . rainbow-delimiters-mode))
-#+END_SRC
-
 ** Folding
 
 #+BEGIN_SRC emacs-lisp
   (add-hook 'prog-mode-hook #'hs-minor-mode)
-#+END_SRC
-
-** =evil-cleverparens=
-
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-cleverparens
-    :hook ((emacs-lisp-mode
-            lisp-interaction-mode
-            scheme-mode
-            clojure-mode)
-           . evil-cleverparens-mode)
-    :config
-    (general-unbind evil-cleverparens-mode-map 'normal #'helm-show-kill-ring))
 #+END_SRC
 
 ** =semantic=
@@ -584,18 +542,11 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
 #+END_SRC
 
 ** Python
-
 *** Elpy
 
 #+BEGIN_SRC emacs-lisp
   (use-package elpy
-    :config (elpy-enable)
-
-    :general
-    (general-def
-      :keymap 'python-mode-map
-      :states 'normal
-      "g d" #'elpy-goto-definition))
+    :config (elpy-enable))
 #+END_SRC
 
 ** Scheme
@@ -636,6 +587,20 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
                       (kbd "z a") #'web-mode-fold-or-unfold
                       (kbd "z k") #'web-mode-element-children-fold-or-unfold)))
 #+END_SRC
+
+*** =emmet-mode=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package emmet-mode
+    :hook (web-mode))
+#+END_SRC
+
+** OCaml
+
+#+BEGIN_SRC emacs-lisp
+  (use-package tuareg)
+#+END_SRC
+
 * Spelling
 
 #+BEGIN_SRC emacs-lisp
@@ -659,6 +624,19 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (global-set-key "\C-cb" 'org-switchb)
 #+END_SRC
 
+** =evil-org=
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-org
+    :after org
+    :config
+    (add-hook 'org-mode-hook 'evil-org-mode)
+    (add-hook 'evil-org-mode-hook
+              (lambda () (evil-org-set-key-theme)))
+    (require 'evil-org-agenda)
+    (evil-org-agenda-set-keys))
+#+END_SRC
+
 ** Appearance
 *** =org-bullets=
 
@@ -680,7 +658,9 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (setq org-latex-preview-ltxpng-directory "/tmp/ltxpng/")
 
   (add-hook 'org-mode-hook
-            #'(lambda () (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))))
+            #'(lambda ()
+                (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.3))
+                (org-toggle-latex-fragment)))
 
   (general-def org-mode-map "C-c d" #'org-toggle-latex-fragment)
 #+END_SRC
@@ -711,7 +691,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
   (add-hook 'org-mode-hook #'electric-quote-mode)
 #+END_SRC
 
-* Custom keybindings
+* Other modes
 ** Magit
 
  #+BEGIN_SRC emacs-lisp
@@ -787,6 +767,7 @@ Use [[https://github.com/hrs/sensible-defaults.el][sensible-defaults.el]] for so
                     "g k" #'eshell-previous-prompt
                     "g j" #'eshell-next-prompt)))
 #+END_SRC
+
 * Window layout
 
 #+BEGIN_SRC emacs-lisp

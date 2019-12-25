@@ -22,16 +22,18 @@
  '(evil-move-beyond-eol t)
  '(evil-move-cursor-back nil)
  '(org-M-RET-may-split-line (quote ((default))))
- '(org-agenda-files (quote ("~/o" "~/o/projects" "~/o/personal" "~/o/notes")))
+ '(org-agenda-files (quote ("~/o")))
+ '(org-list-allow-alphabetical t)
  '(org-return-follows-link t)
  '(org-special-ctrl-a/e t)
  '(org-startup-indented t)
  '(org-startup-with-inline-images t)
+ '(org-startup-with-latex-preview t)
  '(package-selected-packages
    (quote
-    (yasnippet workgroups twilight-theme company-web minimal-theme emmet-mode web-mode visual-fill-column company-box spacemacs-theme minions moody org-bullets evil-org ranger evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil)))
- '(ranger-override-dired t)
- '(ranger-override-dired-mode t)
+    (tuareg visual-fill-mode yasnippet workgroups twilight-theme company-web minimal-theme emmet-mode web-mode visual-fill-column company-box spacemacs-theme minions moody org-bullets evil-org ranger evil-leader elpy ws-butler dtrt-indent function-args zenburn-theme company-c-headers company-quickhelp company company-mode helm-gtags ggtags helm-spotify-plus helm-descbinds helm-moccur helm-config helm evil-collection evil-surround ## parinfer cider zeno-theme immaterial-theme solarized-theme geiser aggressive-indent evil-cleverparens lispy rainbow-delimiters magit ace-jump-mode auto-complete material-theme which-key general use-package evil)))
+ '(ranger-override-dired nil)
+ '(ranger-override-dired-mode nil)
  '(ranger-show-literal nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -39,7 +41,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ace-jump-face-foreground ((t (:background "black" :foreground "yellow" :weight bold))))
- '(org-block-begin-line ((t (:background "default" :box nil))) t)
- '(org-block-end-line ((t (:background "default" :box nil))) t)
+ '(highlight ((t (:background "gray23"))))
+ '(org-block-begin-line ((t (:background "default" :box nil))))
+ '(org-block-end-line ((t (:background "default" :box nil))))
  '(org-level-1 ((t (:background "default" :box nil))))
  '(org-level-2 ((t (:background "default" :box nil)))))
